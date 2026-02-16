@@ -44,11 +44,20 @@ def print_banner():
 
 def check_internet_connection():
     """Verifica conexión a internet"""
-    try:
-        urllib.request.urlopen('https://www.github.com', timeout=5)
-        return True
-    except:
-        return False
+    urls_to_try = [
+        'https://raw.githubusercontent.com',
+        'https://github.com',
+        'https://www.google.com',
+    ]
+    
+    for url in urls_to_try:
+        try:
+            urllib.request.urlopen(url, timeout=10)
+            return True
+        except:
+            continue
+    
+    return False
 
 
 def download_repository(repo_url, dest_dir, verbose=False):
