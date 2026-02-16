@@ -1,9 +1,6 @@
 # ============================================================================
 # AI_AGENT_WIZARD - AI PROJECT INDEX
 # ============================================================================
-# PURPOSE: Machine-readable project map for AI assistants.
-# USAGE: Read this file FIRST before any codebase modification task.
-# UPDATE: After ANY code change, update affected sections immediately.
 # LAST_UPDATED: 2026-02-16
 # ============================================================================
 
@@ -13,7 +10,7 @@ meta:
   lang: [Python]
   stack:
     backend: Python (pip)
-  root: /home/informaticaccr/MONITOR_NEW/monitor_ccr/AI_AGENT_WIZARD
+  root: C:\Users\simon\OneDrive\Desktop\IA\AI_AGENT_WIZARD
 
 # ============================================================================
 # FILE MAP
@@ -21,65 +18,101 @@ meta:
 files:
   CHANGELOG.md:
     type: md
-    lines: ~160
-  CLAUDE.md:
+    lines: ~246
+  PROJECT_STRUCTURE.md:
     type: md
-    lines: ~18
-  IMPLEMENTATION_SUMMARY.md:
-    type: md
-    lines: ~261
+    lines: ~108
   README.md:
     type: md
-    lines: ~226
+    lines: ~338
+  REORGANIZATION_SUMMARY.md:
+    type: md
+    lines: ~201
+  docs\CLAUDE.md:
+    type: md
+    lines: ~18
+  docs\IMPLEMENTATION_SUMMARY.md:
+    type: md
+    lines: ~261
+  docs\INSTALL_GUIDE.md:
+    type: md
+    lines: ~193
+  docs\INSTALL_ONLINE.md:
+    type: md
+    lines: ~284
+  docs\QUICKSTART_ONLINE.md:
+    type: md
+    lines: ~193
+  docs\README.md:
+    type: md
+    lines: ~52
+  docs\READY_TO_PUSH.md:
+    type: md
+    lines: ~218
   install.py:
     type: py
-    lines: ~18
+    lines: ~19
+  install_online.py:
+    type: py
+    lines: ~280
   requirements.txt:
     type: txt
     lines: ~3
-  src/__init__.py:
+  scripts\README.md:
+    type: md
+    lines: ~104
+  scripts\configure_online_installer.py:
+    type: py
+    lines: ~99
+  scripts\git_push.sh:
+    type: sh
+    lines: ~59
+  scripts\verify_compatibility.py:
+    type: py
+    lines: ~173
+  src\__init__.py:
     type: py
     lines: ~7
-  src/core/__init__.py:
+  src\core\__init__.py:
     type: py
     lines: ~23
-  src/core/detectors.py:
+  src\core\detectors.py:
     type: py
     lines: ~254
-  src/core/extractors.py:
+  src\core\extractors.py:
     type: py
-    lines: ~302
-  src/core/scanner.py:
+    lines: ~303
+  src\core\scanner.py:
     type: py
-    lines: ~126
-  src/core/validators.py:
+    lines: ~127
+  src\core\validators.py:
     type: py
     lines: ~82
-  src/generators/__init__.py:
+  src\generators\__init__.py:
     type: py
     lines: ~3
-  src/generators/all_generators.py:
+  src\generators\all_generators.py:
     type: py
-    lines: ~197
-  src/main.py:
+    lines: ~164
+  src\main.py:
     type: py
-    lines: ~226
-  src/templates/__init__.py:
+    lines: ~633
+  src\templates\__init__.py:
     type: py
     lines: ~17
-  src/templates/project_templates.py:
+  src\templates\project_templates.py:
     type: py
     lines: ~120
-  src/utils/__init__.py:
+  src\utils\__init__.py:
     type: py
     lines: ~11
-  src/utils/warnings.py:
+  src\utils\warnings.py:
     type: py
     lines: ~52
-  tests/__init__.py:
+  tests\__init__.py:
     type: py
     lines: ~1
-  tests/test_all.py:
+  tests\test_all.py:
     type: py
     lines: ~136
 
@@ -87,53 +120,85 @@ files:
 # FUNCTIONS - name: line
 # ============================================================================
 functions:
-  src/core/detectors.py:
+  install_online.py:
+    print_banner: 38
+    download_repository: 46
+    report_progress: 74
+    extract_repository: 97
+    install_wizard: 138
+    cleanup: 182
+    main: 204
+  scripts\configure_online_installer.py:
+    update_installer_config: 16
+    validate_repo_format: 71
+    main: 81
+  scripts\verify_compatibility.py:
+    check_file_for_hardcoded_paths: 12
+    verify_python_files: 36
+    verify_os_path_usage: 71
+    verify_scripts: 97
+    verify_structure: 118
+    main: 140
+  src\core\detectors.py:
     warn: 14
     vprint: 15
     detect_languages: 18
     detect_frameworks: 53
     detect_services: 162
     detect_monorepo: 198
-  src/core/extractors.py:
-    warn: 12
-    vprint: 13
-    extract_functions: 16
-    extract_endpoints: 129
-    extract_vue_components: 194
-    extract_dependencies: 254
-  src/core/scanner.py:
-    warn: 15
-    vprint: 16
-    iter_source_files: 45
-    scan_files: 66
-    is_empty_project: 115
-    count_lines_of_code: 124
-  src/core/validators.py:
+  src\core\extractors.py:
+    warn: 13
+    vprint: 14
+    extract_functions: 17
+    extract_endpoints: 130
+    extract_vue_components: 195
+    extract_dependencies: 255
+  src\core\scanner.py:
+    warn: 16
+    vprint: 17
+    iter_source_files: 46
+    scan_files: 67
+    is_empty_project: 116
+    count_lines_of_code: 125
+  src\core\validators.py:
     check_python_version: 11
     check_git_installed: 18
     check_write_permissions: 37
     check_disk_space: 49
     validate_environment: 61
     validate_project_path: 74
-  src/generators/all_generators.py:
-    generate_project_index: 9
-    generate_all_yamls: 105
-  src/main.py:
-    install: 26
-    main: 185
-  src/templates/project_templates.py:
+  src\generators\all_generators.py:
+    generate_project_index: 10
+    generate_all_yamls: 101
+  src\main.py:
+    _get_update_script: 27
+    Updater: 62
+    Updater.__init__: 65
+    Updater.vprint: 72
+    Updater.verify_installation: 78
+    Updater.download_repository: 93
+    Updater.report_progress: 105
+    Updater.extract_repository: 128
+    Updater.copy_src_files: 156
+    Updater.regenerate_indexes: 195
+    Updater.cleanup: 280
+    Updater.update: 289
+    print_banner: 327
+    install: 382
+    main: 592
+  src\templates\project_templates.py:
     get_template: 59
     list_templates: 64
     suggest_template: 69
     create_structure: 105
-  src/utils/warnings.py:
+  src\utils\warnings.py:
     set_verbose: 11
     warn: 17
     vprint: 27
     show_warnings_summary: 34
     clear_warnings: 44
     get_warnings: 50
-  tests/test_all.py:
+  tests\test_all.py:
     TestValidators: 21
     TestValidators.test_python_version: 24
     TestValidators.test_git_installed: 29
@@ -155,14 +220,15 @@ functions:
 # DEPENDENCIES
  # ============================================================================
 dependencies:
-  install.py: [src/main.py]
-  src/core/__init__.py: [CHANGELOG.md]
-  src/core/detectors.py: [src/utils/warnings.py]
-  src/core/extractors.py: [requirements.txt, src/utils/warnings.py]
-  src/core/scanner.py: [src/utils/warnings.py]
-  src/main.py: [src/generators/__init__.py, src/templates/project_templates.py, src/core/detectors.py, src/utils/warnings.py]
-  src/templates/__init__.py: [CHANGELOG.md]
-  src/utils/__init__.py: [CHANGELOG.md]
-  tests/test_all.py: [src/templates/project_templates.py, src/core/detectors.py]
+  install.py: [src\main.py]
+  install_online.py: [src\main.py]
+  scripts\configure_online_installer.py: [requirements.txt]
+  src\core\__init__.py: [CHANGELOG.md]
+  src\core\detectors.py: [src\utils\warnings.py]
+  src\core\extractors.py: [src\utils\warnings.py, requirements.txt]
+  src\core\scanner.py: [src\utils\warnings.py]
+  src\main.py: [src\utils\warnings.py, src\generators\all_generators.py, src\templates\project_templates.py, src\core\detectors.py]
+  src\templates\__init__.py: [CHANGELOG.md]
+  src\utils\__init__.py: [CHANGELOG.md]
+  tests\test_all.py: [src\templates\project_templates.py, src\core\detectors.py]
 
-# Para actualizar: python .ai/update_index.py

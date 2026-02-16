@@ -44,17 +44,7 @@ def print_banner():
 
 
 def download_repository(repo_url, dest_dir, verbose=False):
-    """
-    Descarga repositorio de GitHub como ZIP
-    
-    Args:
-        repo_url: URL del repositorio GitHub (formato: owner/repo)
-        dest_dir: Directorio temporal de destino
-        verbose: Mostrar progreso detallado
-        
-    Returns:
-        Path del archivo ZIP descargado
-    """
+    """Descarga repositorio de GitHub como ZIP"""
     # Construir URL del ZIP
     zip_url = f"https://github.com/{repo_url}/archive/refs/heads/{GITHUB_BRANCH}.zip"
     zip_path = os.path.join(dest_dir, "ai_agent_wizard.zip")
@@ -95,17 +85,7 @@ def download_repository(repo_url, dest_dir, verbose=False):
 
 
 def extract_repository(zip_path, dest_dir, verbose=False):
-    """
-    Extrae el ZIP descargado
-    
-    Args:
-        zip_path: Ruta del archivo ZIP
-        dest_dir: Directorio de extracción
-        verbose: Mostrar progreso detallado
-        
-    Returns:
-        Path del directorio extraído
-    """
+    """Extrae el ZIP descargado"""
     if verbose:
         print(f"  📦 Extrayendo archivos...")
     else:
@@ -136,18 +116,7 @@ def extract_repository(zip_path, dest_dir, verbose=False):
 
 
 def install_wizard(extracted_path, project_path, auto_mode=False, verbose=False):
-    """
-    Instala el wizard usando el código descargado
-    
-    Args:
-        extracted_path: Path del código extraído
-        project_path: Path del proyecto donde instalar
-        auto_mode: Modo automático sin interacción
-        verbose: Modo verbose
-        
-    Returns:
-        True si la instalación fue exitosa
-    """
+    """Instala el wizard usando el código descargado"""
     print("\n  🚀 Iniciando instalación...\n")
     
     # Verificar que exista src/ en el código descargado
@@ -180,13 +149,7 @@ def install_wizard(extracted_path, project_path, auto_mode=False, verbose=False)
 
 
 def cleanup(temp_dir, verbose=False):
-    """
-    Limpia archivos temporales descargados
-    
-    Args:
-        temp_dir: Directorio temporal a eliminar
-        verbose: Mostrar progreso
-    """
+    """Limpia archivos temporales"""
     if verbose:
         print(f"\n  🧹 Limpiando archivos temporales: {temp_dir}")
     else:
@@ -261,7 +224,7 @@ def main():
             print("  ✅ INSTALACIÓN ONLINE COMPLETADA")
             print("  " + "=" * 70)
             print(f"\n  El sistema .ai/ está listo en: {project_path}")
-            print(f"  Próximo paso: Lee .ai/PROJECT_INDEX.yaml para comenzar\n")
+            print(f"  Próximo paso: Lee .ai/FLOW.yaml para usar el sistema\n")
         else:
             print("\n  ❌ La instalación no se completó correctamente.\n")
             sys.exit(1)
