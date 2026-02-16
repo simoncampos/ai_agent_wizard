@@ -24,6 +24,7 @@ import shutil
 import tempfile
 import urllib.request
 import zipfile
+import ssl
 from pathlib import Path
 
 
@@ -64,11 +65,20 @@ def download_repository(repo_url, dest_dir, verbose=False):
         print("  📥 Descargando código actualizado...", end="", flush=True)
     
     try:
+        # Crear contexto SSL sin verificación (para evitar errores de certificado)
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+        
         # Descargar con progreso
         def report_progress(block_num, block_size, total_size):
             if verbose and total_size > 0:
                 percent = int(100 * block_num * block_size / total_size)
                 print(f"\r     Progreso: {percent}%", end="", flush=True)
+        
+        # Instalar opener con contexto SSL
+        opener = urllib.request.build_opener(urllib.request.HTTPSHandler(context=ssl_context))
+        urllib.request.install_opener(opener)
         
         urllib.request.urlretrieve(zip_url, zip_path, report_progress if verbose else None)
         
