@@ -42,24 +42,6 @@ def print_banner():
     print("=" * 70 + "\n")
 
 
-def check_internet_connection():
-    """Verifica conexión a internet"""
-    urls_to_try = [
-        'https://raw.githubusercontent.com',
-        'https://github.com',
-        'https://www.google.com',
-    ]
-    
-    for url in urls_to_try:
-        try:
-            urllib.request.urlopen(url, timeout=10)
-            return True
-        except:
-            continue
-    
-    return False
-
-
 def download_repository(repo_url, dest_dir, verbose=False):
     """
     Descarga repositorio de GitHub como ZIP
@@ -228,15 +210,6 @@ def main():
     
     print(f"  📂 Proyecto: {project_name}")
     print(f"  📍 Ruta: {project_path}\n")
-    
-    # Verificar conexión a internet
-    print("  🌐 Verificando conexión a internet...", end="", flush=True)
-    if not check_internet_connection():
-        print(" ✗")
-        print("\n  ERROR: No hay conexión a internet.")
-        print("  💡 Tip: Usa 'install.py' si ya tienes el código descargado.\n")
-        sys.exit(1)
-    print(" ✓")
     
     # Confirmar instalación (si no es auto)
     if not auto_mode:
