@@ -19,9 +19,15 @@ meta:
 # FILE MAP
 # ============================================================================
 files:
+  CHANGELOG.md:
+    type: md
+    lines: ~160
   CLAUDE.md:
     type: md
     lines: ~18
+  IMPLEMENTATION_SUMMARY.md:
+    type: md
+    lines: ~261
   README.md:
     type: md
     lines: ~226
@@ -150,13 +156,13 @@ functions:
  # ============================================================================
 dependencies:
   install.py: [src/main.py]
-  src/core/__init__.py: [CLAUDE.md]
+  src/core/__init__.py: [CHANGELOG.md]
   src/core/detectors.py: [src/utils/warnings.py]
   src/core/extractors.py: [requirements.txt, src/utils/warnings.py]
   src/core/scanner.py: [src/utils/warnings.py]
-  src/main.py: [src/utils/warnings.py, src/generators/__init__.py, src/templates/project_templates.py, src/core/detectors.py]
-  src/templates/__init__.py: [CLAUDE.md]
-  src/utils/__init__.py: [CLAUDE.md]
+  src/main.py: [src/generators/__init__.py, src/templates/project_templates.py, src/core/detectors.py, src/utils/warnings.py]
+  src/templates/__init__.py: [CHANGELOG.md]
+  src/utils/__init__.py: [CHANGELOG.md]
   tests/test_all.py: [src/templates/project_templates.py, src/core/detectors.py]
 
 # Para actualizar: python .ai/update_index.py
