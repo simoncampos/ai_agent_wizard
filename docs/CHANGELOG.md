@@ -1,5 +1,89 @@
 # CHANGELOG
 
+## [2.0.0] - 2026-02-16
+
+### 💥 Breaking Changes
+- `.ai/src/` ahora contiene el motor de indexación (antes no se copiaba)
+- `update.py` actualiza `.ai/src/` en vez del root del proyecto
+- `update_index.py` importa desde `.ai/src/` (ya no depende de tener `src/` en root)
+- Eliminados `install_hook.py` y `pre-commit.ps1` (hook se instala automáticamente)
+
+### ✨ Nuevas características
+
+#### Detección de versión previa
+- `install.py` / `install_online.py` detectan si `.ai/` ya existe
+- Menú interactivo: [1] Reinstalar desde cero, [2] Actualizar, [3] Cancelar
+- `update.py` también presenta menú: [1] Actualizar, [2] Eliminar, [3] Cancelar
+- Modo `--auto` salta el menú y procede automáticamente
+
+#### Git hook automático
+- `pre-commit.hook` se instala automáticamente durante `install()`
+- Regenera índices en cada `git commit` si hay cambios en código fuente
+- Auto-agrega YAMLs actualizados al commit
+- No requiere configuración manual
+
+#### Sistema de comprensión para AI agents
+- `GRAPH.yaml` — Grafo de dependencias comprimido (~30 líneas)
+- `FLOW.yaml` — Instrucciones paso a paso para agentes IA
+- `ARCHITECTURE.yaml` — Fases de ejecución y módulos
+- Lectura jerárquica: FLOW → GRAPH → PROJECT_INDEX
+
+#### Motor de indexación portable (.ai/src/)
+- Se copia `src/` a `.ai/src/` durante instalación (sin `__pycache__`)
+- `update_index.py` y `update.py` importan desde `.ai/src/`
+- El proyecto instalado es autónomo: no necesita el repo wizard
+
+### 🔧 Refactorización
+
+#### main.py: 652 → 320 líneas (-51%)
+- Eliminado `_get_update_script()`: 350 líneas de código muerto (duplicaba update.py como string inline)
+- Reducido de 6 fases a 5 fases
+- Helpers extraídos: `_copy_tree_clean()`, `_copy_file_safe()`, `_install_git_hook()`
+
+#### update_index.py: reescrito completo
+- Regenera TODOS los YAMLs (antes solo PROJECT_INDEX)
+- Soporta `--quiet` (silencioso para hooks), `--verbose`, `--help`
+- Importa desde `.ai/src/` en vez del root
+
+#### update.py: reescrito completo
+- Actualiza `.ai/src/` (no el root del usuario)
+- Auto-actualiza scripts (update.py, update_index.py, hook)
+- Reinstala git hook automáticamente
+- Regenera todos los YAMLs incluyendo ARCHITECTURE, FLOW, GRAPH
+
+#### Prompt CLAUDE.md mejorado
+- Instrucciones inequívocas: "YA existe, NO lo creaste, NO lo modifiques, solo ÚSALO"
+- Evita que la IA intente recrear el sistema de índices
+
+### 📁 Reorganización
+
+#### Movidos a docs/
+- `CHANGELOG.md` → `docs/CHANGELOG.md`
+- `PROJECT_STRUCTURE.md` → `docs/PROJECT_STRUCTURE.md`
+- `REORGANIZATION_SUMMARY.md` → `docs/REORGANIZATION_SUMMARY.md`
+- `requirements.txt` → `docs/requirements.txt`
+
+#### Eliminados
+- `.ai/install_hook.py` — Innecesario (hook se auto-instala)
+- `.ai/pre-commit.ps1` — Innecesario (Git usa bash en todas las plataformas)
+
+#### Raíz final limpia
+```
+install.py              ← Instalación local
+install_online.py       ← Instalación online
+LICENSE / README.md     ← Lo básico
+src/ tests/ docs/ scripts/ .ai/
+```
+
+### 📊 Estadísticas
+- **main.py**: -332 líneas eliminadas (código muerto)
+- **update_index.py**: 73 → 120 líneas (ahora regenera todo)
+- **update.py**: 375 → 292 líneas (más limpio, menos redundancia)
+- **Archivos eliminados**: 2 (install_hook.py, pre-commit.ps1)
+- **Archivos movidos**: 4 (a docs/)
+
+---
+
 ## [1.1.0] - 2026-02-16
 
 ### ✨ Nuevo: Instalador Online
@@ -240,7 +324,4 @@ git tag -a v1.0.0 -m "Initial release"
 ---
 
 **Creado por:** AI Agent Wizard  
-**Fecha:** 2026-01-11  
-**Versión:** 1.0.0  
-**Líneas de código:** 2183  
-**Files:** 28
+**Versión actual:** 2.0.0
