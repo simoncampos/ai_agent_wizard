@@ -1,0 +1,10 @@
+# AI_AGENT_WIZARD - ERRORS
+# LAST_UPDATED: 2026-02-16
+
+common_errors:
+  - pattern: "ModuleNotFoundError"
+    cause: Dependencia no instalada
+    fix: "Instalar con pip/npm"
+
+restart_procedures:
+  full: "Reiniciar aplicación"

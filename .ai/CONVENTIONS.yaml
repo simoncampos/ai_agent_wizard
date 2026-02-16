@@ -1,0 +1,18 @@
+# AI_AGENT_WIZARD - CONVENTIONS
+# LAST_UPDATED: 2026-02-16
+
+naming:
+  files_python: snake_case.py
+  functions_python: snake_case
+  
+  css_classes: kebab-case
+
+code_style:
+  indentation: "4 espacios"
+  quotes_python: "comillas dobles"
+  max_line_length: 120
+
+file_locations:
+  new_component: "src/components/"
+  new_utility: "src/utils/"
+  new_test: "tests/"

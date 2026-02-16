@@ -1,0 +1,162 @@
+# ============================================================================
+# AI_AGENT_WIZARD - AI PROJECT INDEX
+# ============================================================================
+# PURPOSE: Machine-readable project map for AI assistants.
+# USAGE: Read this file FIRST before any codebase modification task.
+# UPDATE: After ANY code change, update affected sections immediately.
+# LAST_UPDATED: 2026-02-16
+# ============================================================================
+
+meta:
+  name: AI_AGENT_WIZARD
+  desc: Proyecto con sistema .ai/ de AI Agent Wizard
+  lang: [Python]
+  stack:
+    backend: Python (pip)
+  root: /home/informaticaccr/MONITOR_NEW/monitor_ccr/AI_AGENT_WIZARD
+
+# ============================================================================
+# FILE MAP
+# ============================================================================
+files:
+  CLAUDE.md:
+    type: md
+    lines: ~18
+  README.md:
+    type: md
+    lines: ~226
+  install.py:
+    type: py
+    lines: ~18
+  requirements.txt:
+    type: txt
+    lines: ~3
+  src/__init__.py:
+    type: py
+    lines: ~7
+  src/core/__init__.py:
+    type: py
+    lines: ~23
+  src/core/detectors.py:
+    type: py
+    lines: ~254
+  src/core/extractors.py:
+    type: py
+    lines: ~302
+  src/core/scanner.py:
+    type: py
+    lines: ~126
+  src/core/validators.py:
+    type: py
+    lines: ~82
+  src/generators/__init__.py:
+    type: py
+    lines: ~3
+  src/generators/all_generators.py:
+    type: py
+    lines: ~197
+  src/main.py:
+    type: py
+    lines: ~226
+  src/templates/__init__.py:
+    type: py
+    lines: ~17
+  src/templates/project_templates.py:
+    type: py
+    lines: ~120
+  src/utils/__init__.py:
+    type: py
+    lines: ~11
+  src/utils/warnings.py:
+    type: py
+    lines: ~52
+  tests/__init__.py:
+    type: py
+    lines: ~1
+  tests/test_all.py:
+    type: py
+    lines: ~136
+
+# ============================================================================
+# FUNCTIONS - name: line
+# ============================================================================
+functions:
+  src/core/detectors.py:
+    warn: 14
+    vprint: 15
+    detect_languages: 18
+    detect_frameworks: 53
+    detect_services: 162
+    detect_monorepo: 198
+  src/core/extractors.py:
+    warn: 12
+    vprint: 13
+    extract_functions: 16
+    extract_endpoints: 129
+    extract_vue_components: 194
+    extract_dependencies: 254
+  src/core/scanner.py:
+    warn: 15
+    vprint: 16
+    iter_source_files: 45
+    scan_files: 66
+    is_empty_project: 115
+    count_lines_of_code: 124
+  src/core/validators.py:
+    check_python_version: 11
+    check_git_installed: 18
+    check_write_permissions: 37
+    check_disk_space: 49
+    validate_environment: 61
+    validate_project_path: 74
+  src/generators/all_generators.py:
+    generate_project_index: 9
+    generate_all_yamls: 105
+  src/main.py:
+    install: 26
+    main: 185
+  src/templates/project_templates.py:
+    get_template: 59
+    list_templates: 64
+    suggest_template: 69
+    create_structure: 105
+  src/utils/warnings.py:
+    set_verbose: 11
+    warn: 17
+    vprint: 27
+    show_warnings_summary: 34
+    clear_warnings: 44
+    get_warnings: 50
+  tests/test_all.py:
+    TestValidators: 21
+    TestValidators.test_python_version: 24
+    TestValidators.test_git_installed: 29
+    TestScanner: 35
+    TestScanner.setUp: 38
+    TestScanner.tearDown: 42
+    TestScanner.test_is_empty_project: 46
+    TestScanner.test_scan_files: 58
+    TestDetectors: 71
+    TestDetectors.setUp: 74
+    TestDetectors.tearDown: 77
+    TestDetectors.test_detect_languages: 80
+    TestExtractors: 93
+    TestExtractors.test_extract_functions: 96
+    TestTemplates: 121
+    TestTemplates.test_suggest_template: 124
+
+# ============================================================================
+# DEPENDENCIES
+ # ============================================================================
+dependencies:
+  install.py: [src/main.py]
+  src/core/__init__.py: [CLAUDE.md]
+  src/core/detectors.py: [src/utils/warnings.py]
+  src/core/extractors.py: [requirements.txt, src/utils/warnings.py]
+  src/core/scanner.py: [src/utils/warnings.py]
+  src/main.py: [src/utils/warnings.py, src/generators/__init__.py, src/templates/project_templates.py, src/core/detectors.py]
+  src/templates/__init__.py: [CLAUDE.md]
+  src/utils/__init__.py: [CLAUDE.md]
+  tests/test_all.py: [src/templates/project_templates.py, src/core/detectors.py]
+
+# Para actualizar: python .ai/update_index.py
