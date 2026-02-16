@@ -275,7 +275,7 @@ Sistema de optimización de contexto para agentes de IA instalado.
 ## .ai/
 Consulta `.ai/FLOW.yaml` para entender el sistema de índices.
 
-Generado por **AI Agent Wizard v1.0.0**
+Generado por **AI Agent Wizard v2.0.0**
 """
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
@@ -305,7 +305,7 @@ Generado por **AI Agent Wizard v1.0.0**
 def main():
     """Entry point principal"""
     print("\n  " + "=" * 60)
-    print("  AI AGENT WIZARD v1.0.0")
+    print("  AI AGENT WIZARD v2.0.0")
     print("  Indexación inteligente: menos tokens, cero navegación")
     print("  " + "=" * 60)
 
