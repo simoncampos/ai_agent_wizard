@@ -1,6 +1,7 @@
 """
-Extractores de informacion del codigo fuente.
-Extrae funciones, endpoints API, componentes UI y dependencias.
+Extractores de información del código fuente.
+Extrae funciones, endpoints API, componentes UI y dependencias con números
+de línea exactos para eliminar navegación manual entre archivos.
 """
 
 import re

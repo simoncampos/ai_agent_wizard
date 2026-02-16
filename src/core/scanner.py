@@ -1,6 +1,7 @@
 """
 Escaner de archivos del proyecto.
 Itera y mapea todos los archivos fuente excluyendo dependencias.
+Construye el índice base para acceso directo sin navegación manual.
 """
 
 import os

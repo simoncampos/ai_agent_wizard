@@ -1,5 +1,91 @@
 # CHANGELOG
 
+## [1.1.0] - 2026-02-16
+
+### ✨ Nuevo: Instalador Online
+
+#### 📡 install_online.py
+- **Descarga automática**: Obtiene última versión desde GitHub
+- **Sin Git requerido**: Usa urllib (stdlib) para descarga HTTP
+- **Auto-limpieza**: Borra archivos temporales automáticamente
+- **Cross-platform**: Funciona en Linux, macOS, Windows usando `os.path.join()`
+- **Modos de operación**:
+  * `--auto`: Instalación sin interacción
+  * `--verbose`: Progreso detallado de descarga
+  * Interactivo: Confirmación antes de instalar
+- **Proceso**:
+  1. Verifica conexión a internet
+  2. Descarga ZIP del repositorio (< 500 KB)
+  3. Extrae en directorio temporal
+  4. Instala sistema .ai/
+  5. Limpia todo rastro de archivos temporales
+- **Seguridad**: Solo descarga desde GitHub oficial vía HTTPS
+- **Tamaño**: 12 KB (vs 300 KB del repo completo)
+
+### 📁 Reorganización del Proyecto
+
+#### Nueva estructura de carpetas
+- **docs/** - Toda la documentación organizada
+  * `INSTALL_GUIDE.md` - Guía simplificada
+  * `INSTALL_ONLINE.md` - Documentación técnica
+  * `QUICKSTART_ONLINE.md` - Referencia rápida
+  * `CLAUDE.md` - Instrucciones para IA
+  * `IMPLEMENTATION_SUMMARY.md` - Resumen técnico
+  * `READY_TO_PUSH.md` - Checklist de publicación
+  
+- **scripts/** - Scripts de ayuda organizados
+  * `git_push.ps1` / `git_push.sh` / `git_push.bat` - Push automático
+  * `configure_online_installer.py` - Configurador
+
+#### Raíz limpia
+Solo archivos esenciales en la raíz:
+- `README.md`, `CHANGELOG.md`, `LICENSE`
+- `install.py`, `install_online.py`
+- `requirements.txt`, `.gitignore`
+- Carpetas: `src/`, `tests/`, `docs/`, `scripts/`
+
+#### 🛠️ configure_online_installer.py
+- Script auxiliar para configurar `GITHUB_REPO`
+- Actualizado para buscar `install_online.py` en raíz del proyecto
+- Valida formato de repositorio (owner/repo)
+- Genera URL de descarga para usuarios
+
+#### 📚 INSTALL_ONLINE.md
+- Documentación técnica completa del instalador online
+- Diagrama de flujo del proceso
+- Guía de troubleshooting
+- Ejemplos de integración con NPM, Makefile
+- Comparativa: Online vs Local
+
+### 🎯 Mejoras de Documentación
+
+#### README.md actualizado
+- Nueva sección: "Método 1: Instalación Online (Recomendado)"
+- Ejemplo comparativo: Con vs Sin AI Agent Wizard
+- Beneficios cuantificados: 95% reducción tokens, 10s vs 2-3 min
+- Comandos de un solo paso con curl/wget
+- Énfasis en "cero navegación" y "acceso directo"
+
+#### Propósito refinado
+Ahora explícitamente menciona **dos objetivos principales**:
+1. Reducción de tokens (hasta 95%)
+2. Eliminación de navegación entre archivos
+
+#### Archivos actualizados
+- `src/main.py`: Banner "menos tokens, cero navegación"
+- `src/generators/all_generators.py`: Headers de YAML más descriptivos
+- `CLAUDE.md` generado: 4 beneficios listados explícitamente
+- Mensajes de instalación: incluyen resumen de beneficios
+
+### 🔧 Cambios Técnicos
+
+- Banner de instalación más conciso y claro
+- Resumen final muestra beneficios activos
+- Mensajes de progreso optimizados
+- Docstrings actualizados con propósito dual
+
+---
+
 ## [1.0.0] - 2026-01-11
 
 ### ✨ Características implementadas

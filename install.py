@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 AI Agent Wizard - Instalador Simple
+Indexación inteligente para agentes de IA: elimina navegación, reduce tokens 95%
 Wrapper que llama al main.py del src/
 """
 

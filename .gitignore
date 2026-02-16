@@ -35,3 +35,11 @@ htmlcov/
 # Temporal
 *.tmp
 temp/
+
+# Sistema .ai/ generado (no subir cuando se usa el wizard en sí mismo)
+.ai/
+
+# Notas personales
+NOTES.md
+TODO.md
+
