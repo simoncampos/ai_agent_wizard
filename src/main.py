@@ -83,6 +83,41 @@ def install(project_path, auto_mode=False, verbose=False):
     print(f"\n  Proyecto: {project_name}")
     print(f"  Ruta: {project_path}")
 
+    # ── Detectar instalación previa ───────────────────────────────────
+    ai_dir_check = os.path.join(project_path, '.ai')
+    if os.path.isdir(ai_dir_check) and not auto_mode:
+        print(f"\n  ⚠  Se detectó una instalación previa de .ai/")
+        print(f"")
+        print(f"  Opciones:")
+        print(f"    [1] Eliminar actual e instalar desde cero")
+        print(f"    [2] Actualizar (mantener datos, actualizar motor + índices)")
+        print(f"    [3] Cancelar")
+        choice = input(f"\n  Elige [1/2/3]: ").strip()
+
+        if choice == '3' or (choice and choice not in ['1', '2']):
+            print("\n  Cancelado.\n")
+            return False
+        elif choice == '2':
+            # Delegar a update.py
+            update_script = os.path.join(ai_dir_check, 'update.py')
+            if os.path.exists(update_script):
+                print("\n  Delegando a update.py...\n")
+                import subprocess
+                result = subprocess.run(
+                    [sys.executable, update_script, '--auto'],
+                    cwd=project_path
+                )
+                return result.returncode == 0
+            else:
+                print("  No se encontró .ai/update.py. Se reinstalará desde cero.")
+        # choice == '1': eliminar y continuar
+        print("\n  🗑️  Eliminando instalación anterior...", end="", flush=True)
+        shutil.rmtree(ai_dir_check)
+        print(" ✓")
+    elif os.path.isdir(ai_dir_check) and auto_mode:
+        # En modo auto, reinstalar desde cero sin preguntar
+        shutil.rmtree(ai_dir_check)
+
     # ── [1/5] Validación ──────────────────────────────────────────────
     if not auto_mode:
         print("\n  [1/5] Validando entorno...")
