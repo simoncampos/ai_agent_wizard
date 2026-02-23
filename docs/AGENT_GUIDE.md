@@ -1,4 +1,4 @@
-# AI_AGENT_WIZARD - Instrucciones para Agentes de IA
+# AGENT_GUIDE - Instrucciones para Agentes de IA
 
 ## IMPORTANTE: Lee esto antes de hacer cualquier cosa
 Este proyecto YA tiene un sistema de índice instalado en `.ai/`.

@@ -215,7 +215,7 @@ def install(project_path, auto_mode=False, verbose=False):
     # ── [5/5] Archivos de instrucciones ───────────────────────────────
     print(f"\n  [5/5] Creando archivos de instrucciones...")
 
-    claude_content = f"""# {project_name} - Instrucciones para Agentes de IA
+    agent_guide_content = f"""# {project_name} - Instrucciones para Agentes de IA
 
 ## IMPORTANTE: Lee esto antes de hacer cualquier cosa
 Este proyecto YA tiene un sistema de índice instalado en `.ai/`.
@@ -248,16 +248,16 @@ Antes de leer o modificar cualquier archivo del proyecto, lee estos archivos (ya
 - `src/` — Motor interno de indexación (NUNCA modificar)
 """
 
-    claude_path = os.path.join(project_path, 'CLAUDE.md')
-    with open(claude_path, 'w', encoding='utf-8') as f:
-        f.write(claude_content)
-    print("         CLAUDE.md")
+    agent_guide_path = os.path.join(project_path, 'AGENT_GUIDE.md')
+    with open(agent_guide_path, 'w', encoding='utf-8') as f:
+        f.write(agent_guide_content)
+    print("         AGENT_GUIDE.md")
 
     try:
         cursorrules = os.path.join(project_path, '.cursorrules')
         if not os.path.exists(cursorrules):
-            os.symlink('CLAUDE.md', cursorrules)
-            print("         .cursorrules -> CLAUDE.md")
+            os.symlink('AGENT_GUIDE.md', cursorrules)
+            print("         .cursorrules -> AGENT_GUIDE.md")
     except Exception:
         pass
 

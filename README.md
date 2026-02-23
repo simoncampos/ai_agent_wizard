@@ -105,8 +105,8 @@ El wizard crea un sistema completo en la carpeta `.ai/`:
 | `TESTING.yaml` | 🧪 Comandos de validación y smoke tests |
 | `ERRORS.yaml` | 🐛 Errores conocidos con soluciones documentadas |
 | `GIT_WORKFLOW.yaml` | 🔀 Políticas de git, tipos de commits y versionado |
-| `CLAUDE.md` | 🤖 Instrucciones para agentes de IA (Claude, Copilot, etc.) |
-| `.cursorrules` | ⚙️ Symlink a CLAUDE.md para Cursor IDE |
+| `AGENT_GUIDE.md` | 🤖 Instrucciones para agentes de IA (Claude, Copilot, etc.) |
+| `.cursorrules` | ⚙️ Symlink a AGENT_GUIDE.md para Cursor IDE |
 | `update_index.py` | 🔄 Script para actualizar el índice después de cambios |
 
 ---
@@ -133,7 +133,7 @@ AI_AGENT_WIZARD/
 │   ├── INSTALL_GUIDE.md         # Guía de instalación simplificada
 │   ├── INSTALL_ONLINE.md        # Documentación técnica del instalador
 │   ├── QUICKSTART_ONLINE.md     # Guía rápida de referencia
-│   ├── CLAUDE.md                # Instrucciones para agentes de IA
+│   ├── AGENT_GUIDE.md                # Instrucciones para agentes de IA
 │   ├── IMPLEMENTATION_SUMMARY.md # Resumen de implementación
 │   └── READY_TO_PUSH.md         # Checklist de publicación
 │
