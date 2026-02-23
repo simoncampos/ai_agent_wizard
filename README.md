@@ -341,5 +341,5 @@ MIT License - Ver [LICENSE](LICENSE)
 
 Desarrollado como herramienta de optimización para interacción con Claude Sonnet 4.5, GPT-4 y otros agentes de IA.
 
-**Versión:** 2.1.0  
+**Versión:** 3.0.0  
 **Generado por:** AI Agent Wizard

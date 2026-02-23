@@ -290,7 +290,7 @@ def main():
             print("  " + "=" * 70)
             print(f"\n  Actualizado: {', '.join(updated)}")
             print(f"  Índices: regenerados automáticamente")
-            print(f"  Versión core: v2.1.0\n")
+            print(f"  Versión core: v3.0.0\n")
         else:
             print("  ⚠️  ACTUALIZACIÓN CON ERRORES")
             print("  " + "=" * 70)
