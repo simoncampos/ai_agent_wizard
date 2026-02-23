@@ -38,7 +38,7 @@ GITHUB_BRANCH = "main"
 def print_banner():
     """Muestra banner de presentación"""
     print("\n" + "=" * 70)
-    print("  AI AGENT WIZARD - INSTALADOR ONLINE v2.0.0")
+    print("  AI AGENT WIZARD - INSTALADOR v2.1.0")
     print("  Indexación inteligente: menos tokens, cero navegación")
     print("=" * 70 + "\n")
 

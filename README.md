@@ -51,22 +51,22 @@ python3 install_online.py --auto
 
 **Ventajas**: Siempre obtienes la última versión, limpieza automática, un solo comando.
 
-### 💾 Método 2: Instalación Local
+### 💾 Método 2: Instalación Local (desde repositorio clonado)
 
 Si ya clonaste el repositorio:
 
 ```bash
-# Instalación rápida
-python3 install.py --auto
+# Instalación rápida en proyecto actual
+python3 install_online.py --auto
 
 # Con progreso detallado
-python3 install.py --auto --verbose
+python3 install_online.py --auto --verbose
 
 # Modo interactivo
-python3 install.py
+python3 install_online.py
 
 # Ver opciones
-python3 install.py --help
+python3 install_online.py --help
 ```
 
 ---
@@ -146,10 +146,9 @@ AI_AGENT_WIZARD/
 ├── tests/                       # 🧪 Tests
 │   └── test_all.py              # Tests unitarios (7 tests)
 │
-├── install.py                   # 💾 Instalador local
-├── install_online.py            # 🌐 Instalador online (descarga desde GitHub)
+├── install_online.py            # 🌐 Instalador (online y local)
 ├── README.md                    # 📖 Este archivo
-├── CHANGELOG.md                 # 📝 Historial de cambios
+├── CHANGELOG.md                 # 📝 Historial de cambios (movido a docs/)
 ├── LICENSE                      # ⚖️ Licencia MIT
 └── requirements.txt             # 📦 Dependencias (ninguna)
 ```
@@ -334,5 +333,5 @@ MIT License - Ver [LICENSE](LICENSE)
 
 Desarrollado como herramienta de optimización para interacción con Claude Sonnet 4.5, GPT-4 y otros agentes de IA.
 
-**Versión:** 2.0.0  
+**Versión:** 2.1.0  
 **Generado por:** AI Agent Wizard

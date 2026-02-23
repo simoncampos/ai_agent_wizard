@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## [2.1.0] - 2026-02-23
+
+### ✨ Mejoras
+
+#### Universalidad mejorada
+- Renombrado `CLAUDE.md` → `AGENT_GUIDE.md` para soportar cualquier agente de IA (Claude, GPT, Copilot, etc.)
+- Actualizado `.cursorrules` para apuntar a `AGENT_GUIDE.md`
+- Todas las referencias en código y documentación actualizadas
+
+#### Instalador consolidado
+- Eliminado `install.py` (instalador local simple)
+- Funcionalidad consolidada en `install_online.py` (descarga desde GitHub o instala en local)
+- Un solo instalador para todas las necesidades
+- Soporta tanto instalación online como local
+
+#### README mejorado
+- Sistema de generación de README con más información del proyecto
+- Generado con nombre en MAYÚSCULAS basado en la carpeta del proyecto
+- Incluye detección automática de stack (lenguajes, frameworks backend/frontend)
+- Mejor visibilidad y profesionalismo
+
+### 🔧 Cambios internos
+- `src/main.py`: actualizado para usar `AGENT_GUIDE.md`
+- Scripts de actualización también generan archivos con nombres universales
+- Mejorado proceso de instalación con reducción de redundancia
+
+### 📊 Impacto
+- Reducción de 1 archivo instalador (simplificación)
+- Mejor compatibilidad con múltiples agentes de IA
+- Documentación más visible y profesional
+
+---
+
 ## [2.0.0] - 2026-02-16
 
 ### 💥 Breaking Changes
