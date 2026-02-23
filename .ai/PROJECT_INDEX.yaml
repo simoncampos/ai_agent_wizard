@@ -1,36 +1,32 @@
 # ============================================================================
 # AI_AGENT_WIZARD - AI PROJECT INDEX
 # ============================================================================
-# LAST_UPDATED: 2026-02-16
+# LAST_UPDATED: 2026-02-23
 # ============================================================================
 
 meta:
-  name: AI_AGENT_WIZARD
+  name: ai_agent_wizard
   desc: Proyecto con sistema .ai/ de AI Agent Wizard
   lang: [Python]
   stack:
-    backend: Python (pip)
-  root: C:\Users\simon\OneDrive\Desktop\IA\AI_AGENT_WIZARD
+  root: C:\Users\simon\OneDrive\Desktop\AI\ai_agent_wizard
 
 # ============================================================================
 # FILE MAP
 # ============================================================================
 files:
-  CHANGELOG.md:
+  AGENT_GUIDE.md:
     type: md
-    lines: ~246
-  PROJECT_STRUCTURE.md:
-    type: md
-    lines: ~108
+    lines: ~38
   README.md:
     type: md
-    lines: ~338
-  REORGANIZATION_SUMMARY.md:
+    lines: ~345
+  docs\AGENT_GUIDE.md:
     type: md
-    lines: ~201
-  docs\CLAUDE.md:
+    lines: ~33
+  docs\CHANGELOG.md:
     type: md
-    lines: ~18
+    lines: ~420
   docs\IMPLEMENTATION_SUMMARY.md:
     type: md
     lines: ~261
@@ -40,6 +36,9 @@ files:
   docs\INSTALL_ONLINE.md:
     type: md
     lines: ~284
+  docs\PROJECT_STRUCTURE.md:
+    type: md
+    lines: ~108
   docs\QUICKSTART_ONLINE.md:
     type: md
     lines: ~193
@@ -49,15 +48,18 @@ files:
   docs\READY_TO_PUSH.md:
     type: md
     lines: ~218
-  install.py:
-    type: py
-    lines: ~19
-  install_online.py:
-    type: py
-    lines: ~280
-  requirements.txt:
+  docs\REORGANIZATION_SUMMARY.md:
+    type: md
+    lines: ~201
+  docs\UPDATE_GUIDE.md:
+    type: md
+    lines: ~229
+  docs\requirements.txt:
     type: txt
     lines: ~3
+  install_online.py:
+    type: py
+    lines: ~243
   scripts\README.md:
     type: md
     lines: ~104
@@ -78,25 +80,31 @@ files:
     lines: ~23
   src\core\detectors.py:
     type: py
-    lines: ~254
+    lines: ~322
   src\core\extractors.py:
     type: py
-    lines: ~303
+    lines: ~548
   src\core\scanner.py:
     type: py
     lines: ~127
   src\core\validators.py:
     type: py
-    lines: ~82
+    lines: ~83
   src\generators\__init__.py:
     type: py
     lines: ~3
   src\generators\all_generators.py:
     type: py
-    lines: ~164
+    lines: ~991
   src\main.py:
     type: py
-    lines: ~633
+    lines: ~371
+  src\scripts\update.py:
+    type: py
+    lines: ~307
+  src\scripts\update_index.py:
+    type: py
+    lines: ~164
   src\templates\__init__.py:
     type: py
     lines: ~17
@@ -114,7 +122,7 @@ files:
     lines: ~1
   tests\test_all.py:
     type: py
-    lines: ~136
+    lines: ~488
 
 # ============================================================================
 # FUNCTIONS - name: line
@@ -123,11 +131,11 @@ functions:
   install_online.py:
     print_banner: 38
     download_repository: 46
-    report_progress: 74
-    extract_repository: 97
-    install_wizard: 138
-    cleanup: 182
-    main: 204
+    report_progress: 64
+    extract_repository: 87
+    install_wizard: 118
+    cleanup: 151
+    main: 167
   scripts\configure_online_installer.py:
     update_installer_config: 16
     validate_repo_format: 71
@@ -144,15 +152,16 @@ functions:
     vprint: 15
     detect_languages: 18
     detect_frameworks: 53
-    detect_services: 162
-    detect_monorepo: 198
+    detect_services: 230
+    detect_monorepo: 266
   src\core\extractors.py:
     warn: 13
     vprint: 14
     extract_functions: 17
-    extract_endpoints: 130
-    extract_vue_components: 195
-    extract_dependencies: 255
+    extract_endpoints: 176
+    extract_ui_components: 303
+    extract_vue_components: 442
+    extract_dependencies: 447
   src\core\scanner.py:
     warn: 16
     vprint: 17
@@ -161,31 +170,41 @@ functions:
     is_empty_project: 116
     count_lines_of_code: 125
   src\core\validators.py:
-    check_python_version: 11
-    check_git_installed: 18
-    check_write_permissions: 37
-    check_disk_space: 49
-    validate_environment: 61
-    validate_project_path: 74
+    check_python_version: 12
+    check_git_installed: 19
+    check_write_permissions: 38
+    check_disk_space: 50
+    validate_environment: 62
+    validate_project_path: 75
   src\generators\all_generators.py:
-    generate_project_index: 10
-    generate_all_yamls: 101
+    generate_project_index: 12
+    generate_all_yamls: 103
+    generate_architecture_yaml: 272
+    generate_flow_yaml: 425
+    generate_graph_yaml: 546
+    generate_changes_yaml: 655
+    generate_summaries_yaml: 759
+    _extract_file_summary: 784
+    generate_context_budget_yaml: 856
+    generate_protocol_yaml: 927
   src\main.py:
-    _get_update_script: 27
-    Updater: 62
-    Updater.__init__: 65
-    Updater.vprint: 72
-    Updater.verify_installation: 78
-    Updater.download_repository: 93
-    Updater.report_progress: 105
-    Updater.extract_repository: 128
-    Updater.copy_src_files: 156
-    Updater.regenerate_indexes: 195
-    Updater.cleanup: 280
-    Updater.update: 289
-    print_banner: 327
-    install: 382
-    main: 592
+    _copy_tree_clean: 36
+    _copy_file_safe: 43
+    _install_git_hook: 51
+    install: 73
+    main: 336
+  src\scripts\update.py:
+    print_banner: 42
+    download_repository: 50
+    report_progress: 66
+    extract_repository: 88
+    update_core: 115
+    regenerate_indices: 193
+    cleanup: 224
+    main: 232
+  src\scripts\update_index.py:
+    update_all: 44
+    _write: 145
   src\templates\project_templates.py:
     get_template: 59
     list_templates: 64
@@ -199,36 +218,78 @@ functions:
     clear_warnings: 44
     get_warnings: 50
   tests\test_all.py:
-    TestValidators: 21
-    TestValidators.test_python_version: 24
-    TestValidators.test_git_installed: 29
-    TestScanner: 35
-    TestScanner.setUp: 38
-    TestScanner.tearDown: 42
-    TestScanner.test_is_empty_project: 46
-    TestScanner.test_scan_files: 58
-    TestDetectors: 71
-    TestDetectors.setUp: 74
-    TestDetectors.tearDown: 77
-    TestDetectors.test_detect_languages: 80
-    TestExtractors: 93
-    TestExtractors.test_extract_functions: 96
-    TestTemplates: 121
-    TestTemplates.test_suggest_template: 124
+    TestValidators: 27
+    TestValidators.test_python_version: 30
+    TestValidators.test_git_installed: 35
+    TestValidators.test_disk_space: 40
+    TestValidators.test_write_permissions: 46
+    TestScanner: 52
+    TestScanner.setUp: 55
+    TestScanner.tearDown: 59
+    TestScanner.test_is_empty_project: 63
+    TestScanner.test_scan_files: 75
+    TestDetectors: 88
+    TestDetectors.setUp: 91
+    TestDetectors.tearDown: 94
+    TestDetectors.test_detect_languages: 97
+    TestDetectors.test_detect_frameworks_django: 109
+    TestDetectors.test_detect_frameworks_laravel: 118
+    TestDetectors.test_detect_frameworks_react: 125
+    TestExtractors: 136
+    TestExtractors.test_extract_python_functions: 139
+    TestExtractors.test_extract_python_decorators: 163
+    TestExtractors.test_extract_php_functions: 184
+    TestExtractors.test_extract_js_functions: 206
+    TestExtractors.test_extract_flask_endpoints: 226
+    TestExtractors.test_extract_express_endpoints: 245
+    TestExtractors.test_extract_laravel_endpoints: 263
+    TestExtractors.test_extract_django_endpoints: 281
+    TestExtractors.test_extract_dependencies_python: 300
+    TestGenerators: 323
+    TestGenerators.setUp: 326
+    TestGenerators.tearDown: 340
+    TestGenerators.test_generate_project_index: 343
+    TestGenerators.test_generate_architecture_yaml: 358
+    TestGenerators.test_generate_graph_yaml: 369
+    TestGenerators.test_generate_changes_yaml: 378
+    TestGenerators.test_generate_summaries_yaml: 390
+    TestGenerators.test_generate_context_budget_yaml: 402
+    TestGenerators.test_generate_protocol_yaml: 410
+    TestGenerators.test_generate_all_yamls: 417
+    TestTemplates: 429
+    TestTemplates.test_suggest_template: 432
+    TestInstallFlow: 443
+    TestInstallFlow.setUp: 446
+    TestInstallFlow.tearDown: 454
+    TestInstallFlow.test_full_install: 457
+
+# ============================================================================
+# API ENDPOINTS
+# ============================================================================
+endpoints:
+  "ALL /route/": {handler: view, file: src\core\extractors.py, line: 207}
+  "ALL /users/": {handler: views.user_list, file: tests\test_all.py, line: 290}
+  "ALL /users/<int:pk>/": {handler: views.user_detail, file: tests\test_all.py, line: 291}
+  "GET /": {handler: index, file: tests\test_all.py, line: 450}
+  "GET /api/users": {handler: inline, file: tests\test_all.py, line: 252}
+  "GET /users": {handler: get_users, file: tests\test_all.py, line: 233}
+  "POST /api/users": {handler: test_extract_laravel_endpoints, file: tests\test_all.py, line: 254}
+  "POST /users": {handler: get_users, file: tests\test_all.py, line: 233}
 
 # ============================================================================
 # DEPENDENCIES
  # ============================================================================
 dependencies:
-  install.py: [src\main.py]
   install_online.py: [src\main.py]
-  scripts\configure_online_installer.py: [requirements.txt]
-  src\core\__init__.py: [CHANGELOG.md]
+  scripts\configure_online_installer.py: [docs\requirements.txt]
+  src\core\__init__.py: [AGENT_GUIDE.md]
   src\core\detectors.py: [src\utils\warnings.py]
-  src\core\extractors.py: [src\utils\warnings.py, requirements.txt]
+  src\core\extractors.py: [docs\requirements.txt, src\utils\warnings.py]
   src\core\scanner.py: [src\utils\warnings.py]
-  src\main.py: [src\utils\warnings.py, src\generators\all_generators.py, src\templates\project_templates.py, src\core\detectors.py]
-  src\templates\__init__.py: [CHANGELOG.md]
-  src\utils\__init__.py: [CHANGELOG.md]
-  tests\test_all.py: [src\templates\project_templates.py, src\core\detectors.py]
+  src\generators\all_generators.py: [docs\requirements.txt]
+  src\main.py: [src\core\detectors.py, src\generators\all_generators.py, src\utils\warnings.py]
+  src\scripts\update_index.py: [src\core\detectors.py, src\generators\all_generators.py]
+  src\templates\__init__.py: [AGENT_GUIDE.md]
+  src\utils\__init__.py: [AGENT_GUIDE.md]
+  tests\test_all.py: [src\core\detectors.py, src\generators\all_generators.py, src\main.py, src\templates\project_templates.py]
 

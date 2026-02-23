@@ -1,10 +1,10 @@
-# AI_AGENT_WIZARD - ERRORS
-# LAST_UPDATED: 2026-02-16
+# ai_agent_wizard Common Errors
+# Last Updated: 2026-02-23
 
 common_errors:
   - pattern: "ModuleNotFoundError"
-    cause: Dependencia no instalada
-    fix: "Instalar con pip/npm"
-
-restart_procedures:
-  full: "Reiniciar aplicación"
+    cause: "Missing dependency"
+    fix: "pip install <package>"
+  - pattern: "ImportError"
+    cause: "Circular import or missing module"
+    fix: "Check import order and dependencies"

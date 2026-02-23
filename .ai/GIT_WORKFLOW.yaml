@@ -1,26 +1,15 @@
-# AI_AGENT_WIZARD - GIT WORKFLOW
-# LAST_UPDATED: 2026-02-16
+# ai_agent_wizard Git Workflow
+# Last Updated: 2026-02-23
 
 repository:
-  main_branch: "main"
-  current_version: "v0.1.0"
+  main_branch: main
+  current_version: v0.1.0
 
 commit_policy:
-  format: "conventional_commits"
+  format: conventional_commits
   types:
-    feat: "Nueva funcionalidad"
-    fix: "Corrección de bug"
-    docs: "Documentación"
-    refactor: "Refactorización"
-    test: "Tests"
-    chore: "Mantenimiento"
-
-versioning:
-  scheme: "semver"
-  tag_format: "vMAJOR.MINOR.PATCH"
-
-protected_files:
-  never_commit:
-    - ".env"
-    - "*.key"
-    - "*credentials*"
+    feat: New feature
+    fix: Bug fix
+    refactor: Code refactor
+    test: Tests
+    chore: Maintenance

@@ -1,14 +1,8 @@
-# AI_AGENT_WIZARD - TESTING
-# LAST_UPDATED: 2026-02-16
-
-health_checks:
-  - name: Sistema activo
-    cmd: "echo OK"
+# ai_agent_wizard Testing
+# Last Updated: 2026-02-23
 
 test_commands:
-  unit: "npm test"
+  unit: "pytest tests/ -v"
 
-quick_validation:
-  python: "python -m py_compile {archivo}"
-  javascript: "node --check {archivo}"
-  json: "python -m json.tool {archivo} > /dev/null"
+test_directories:
+  - tests

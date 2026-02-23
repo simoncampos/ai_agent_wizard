@@ -14,16 +14,19 @@ src_dir = os.path.dirname(os.path.abspath(__file__))
 if src_dir not in sys.path:
     sys.path.insert(0, src_dir)
 
-from core.scanner import scan_files, is_empty_project, iter_source_files
-from core.detectors import detect_languages, detect_frameworks, detect_services, detect_monorepo
+from core.scanner import scan_files, iter_source_files
+from core.detectors import detect_languages, detect_frameworks
 from core.extractors import extract_functions, extract_endpoints, extract_vue_components, extract_dependencies
 from core.validators import validate_environment
-from templates.project_templates import suggest_template, create_structure, list_templates
 from generators.all_generators import (
     generate_project_index, generate_all_yamls,
-    generate_architecture_yaml, generate_flow_yaml, generate_graph_yaml
+    generate_architecture_yaml, generate_flow_yaml, generate_graph_yaml,
+    generate_changes_yaml, generate_summaries_yaml,
+    generate_context_budget_yaml, generate_protocol_yaml
 )
 from utils.warnings import set_verbose, warn, show_warnings_summary, vprint
+
+VERSION = "3.0.0"
 
 
 # ============================================================================
@@ -78,7 +81,6 @@ def install(project_path, auto_mode=False, verbose=False):
 
     project_path = os.path.abspath(project_path)
     project_name = os.path.basename(project_path)
-    wizard_root = os.path.dirname(src_dir)  # Raíz del wizard (padre de src/)
 
     print(f"\n  Proyecto: {project_name}")
     print(f"  Ruta: {project_path}")
@@ -177,13 +179,15 @@ def install(project_path, auto_mode=False, verbose=False):
         f.write(index_content)
     print("         PROJECT_INDEX.yaml")
 
-    yamls = generate_all_yamls(project_name, languages, frameworks)
+    yamls = generate_all_yamls(project_name, languages, frameworks, project_path, files_map)
     for filename, content in yamls.items():
         with open(os.path.join(ai_dir, filename), 'w', encoding='utf-8') as f:
             f.write(content)
         print(f"         {filename}")
 
-    arch_content = generate_architecture_yaml(project_path)
+    arch_content = generate_architecture_yaml(
+        project_path, languages, frameworks, files_map, functions, dependencies
+    )
     with open(os.path.join(ai_dir, 'ARCHITECTURE.yaml'), 'w', encoding='utf-8') as f:
         f.write(arch_content)
     print("         ARCHITECTURE.yaml")
@@ -198,14 +202,34 @@ def install(project_path, auto_mode=False, verbose=False):
         f.write(graph_content)
     print("         GRAPH.yaml")
 
+    changes_content = generate_changes_yaml(project_path, files_map)
+    with open(os.path.join(ai_dir, 'CHANGES.yaml'), 'w', encoding='utf-8') as f:
+        f.write(changes_content)
+    print("         CHANGES.yaml")
+
+    summaries_content = generate_summaries_yaml(files_map, functions)
+    with open(os.path.join(ai_dir, 'SUMMARIES.yaml'), 'w', encoding='utf-8') as f:
+        f.write(summaries_content)
+    print("         SUMMARIES.yaml")
+
+    budget_content = generate_context_budget_yaml(files_map, functions, endpoints, components)
+    with open(os.path.join(ai_dir, 'CONTEXT_BUDGET.yaml'), 'w', encoding='utf-8') as f:
+        f.write(budget_content)
+    print("         CONTEXT_BUDGET.yaml")
+
+    protocol_content = generate_protocol_yaml()
+    with open(os.path.join(ai_dir, 'PROTOCOL.yaml'), 'w', encoding='utf-8') as f:
+        f.write(protocol_content)
+    print("         PROTOCOL.yaml")
+
     # — Motor de indexación (.ai/src/) —
     _copy_tree_clean(src_dir, os.path.join(ai_dir, 'src'))
     vprint("Motor copiado a .ai/src/", level=1)
 
     # — Scripts de actualización —
-    wizard_ai = os.path.join(wizard_root, '.ai')
+    scripts_dir = os.path.join(src_dir, 'scripts')
     for script in ['update.py', 'update_index.py', 'pre-commit.hook']:
-        if _copy_file_safe(os.path.join(wizard_ai, script), os.path.join(ai_dir, script)):
+        if _copy_file_safe(os.path.join(scripts_dir, script), os.path.join(ai_dir, script)):
             print(f"         {script}")
 
     # — Git hook automático —
@@ -224,21 +248,28 @@ Solo ÚSALO para trabajar de forma eficiente.
 
 ## Tu primer paso OBLIGATORIO
 Antes de leer o modificar cualquier archivo del proyecto, lee estos archivos (ya existen):
-1. `.ai/FLOW.yaml` — Te explica cómo usar el sistema de índices
-2. `.ai/GRAPH.yaml` — Grafo comprimido de dependencias entre módulos
+1. `.ai/PROTOCOL.yaml` — Reglas de comportamiento para agentes IA
+2. `.ai/FLOW.yaml` — Te explica cómo usar el sistema de índices
 3. `.ai/PROJECT_INDEX.yaml` — Mapa completo: cada función, endpoint y componente con su archivo y línea exacta
+4. `.ai/CONTEXT_BUDGET.yaml` — Qué archivos leer primero según prioridad
 
 ## Reglas de trabajo
 - NUNCA leas un archivo completo si solo necesitas una función. Busca su ubicación en PROJECT_INDEX.yaml primero.
 - SIEMPRE usa los números de línea del índice para leer solo la sección relevante.
 - NUNCA modifiques nada dentro de `.ai/`. Es generado automáticamente.
+- Consulta `.ai/CHANGES.yaml` para ver qué archivos cambiaron recientemente.
+- Consulta `.ai/SUMMARIES.yaml` para un resumen rápido de cada archivo.
 - Si el usuario modifica código y necesita actualizar índices: `python .ai/update_index.py`
 
 ## Qué hay en .ai/ (NO TOCAR)
 - `PROJECT_INDEX.yaml` — Funciones, endpoints, componentes con líneas exactas
 - `GRAPH.yaml` — Dependencias entre módulos (lectura rápida)
-- `ARCHITECTURE.yaml` — Flujo de ejecución y estructura
+- `ARCHITECTURE.yaml` — Estructura del proyecto y módulos
 - `FLOW.yaml` — Instrucciones de uso para ti
+- `CHANGES.yaml` — Archivos modificados desde la última indexación
+- `SUMMARIES.yaml` — Resúmenes semánticos de cada archivo
+- `CONTEXT_BUDGET.yaml` — Prioridad de lectura por archivo
+- `PROTOCOL.yaml` — Reglas de comportamiento para agentes IA
 - `CONVENTIONS.yaml` — Convenciones de código del proyecto
 - `TESTING.yaml` — Cómo ejecutar tests
 - `ERRORS.yaml` — Errores conocidos
@@ -275,7 +306,7 @@ Sistema de optimización de contexto para agentes de IA instalado.
 ## .ai/
 Consulta `.ai/FLOW.yaml` para entender el sistema de índices.
 
-Generado por **AI Agent Wizard v2.1.0**
+Generado por **AI Agent Wizard v{VERSION}**
 """
         with open(readme_path, 'w', encoding='utf-8') as f:
             f.write(readme_content)
@@ -305,7 +336,7 @@ Generado por **AI Agent Wizard v2.1.0**
 def main():
     """Entry point principal"""
     print("\n  " + "=" * 60)
-    print("  AI AGENT WIZARD v2.1.0")
+    print(f"  AI AGENT WIZARD v{VERSION}")
     print("  Indexación inteligente: menos tokens, cero navegación")
     print("  " + "=" * 60)
 

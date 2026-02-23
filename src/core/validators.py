@@ -5,6 +5,7 @@ Verifica Python 3.7+, Git, permisos de escritura, etc.
 
 import sys
 import os
+import shutil
 import subprocess
 
 
@@ -47,14 +48,14 @@ def check_write_permissions(path):
 
 
 def check_disk_space(path, min_mb=10):
-    """Verifica que haya espacio en disco suficiente"""
+    """Verifica que haya espacio en disco suficiente (multiplataforma)"""
     try:
-        stat = os.statvfs(path)
-        free_mb = (stat.f_bavail * stat.f_frsize) / (1024 * 1024)
+        usage = shutil.disk_usage(path)
+        free_mb = usage.free / (1024 * 1024)
         if free_mb < min_mb:
             return False, f"Espacio insuficiente: {free_mb:.1f}MB (minimo: {min_mb}MB)"
         return True, f"{free_mb:.1f}MB disponibles"
-    except:
+    except Exception:
         return True, "No se pudo verificar (asumiendo OK)"
 
 

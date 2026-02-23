@@ -1,5 +1,65 @@
 # CHANGELOG
 
+## [3.0.0] - 2025-06-18
+
+### 💥 Breaking Changes
+- Todos los YAMLs generados dinámicamente (antes ARCHITECTURE y GRAPH estaban hardcodeados)
+- `extract_vue_components` renombrado a `extract_ui_components` (alias backward-compatible disponible)
+- 4 nuevos archivos YAML en `.ai/` — agentes deben leer PROTOCOL.yaml primero
+
+### ✨ Nuevas características
+
+#### Fase 1 — Corrección de bugs críticos
+- **Windows fix**: `check_disk_space` usa `shutil.disk_usage` en vez de `os.statvfs` (incompatible con Windows)
+- **Imports limpios**: eliminadas 6 importaciones muertas de `main.py`
+- **Scripts portables**: scripts movidos a `src/scripts/` para distribución confiable
+- **ARCHITECTURE.yaml dinámico**: analiza estructura real del proyecto (directorios, módulos, dependencias, entry points)
+- **GRAPH.yaml dinámico**: construye grafo real de dependencias, rutas API, árbol de componentes, ranking de archivos clave
+- **`.cursorrules` actualizado** a v3.0.0 con los 12 archivos YAML listados
+
+#### Fase 2 — Detección mejorada (Python/PHP/Node.js)
+- **Decoradores Python**: `@dataclass`, `@property`, `@staticmethod`, `@classmethod`, `@abstractmethod`
+- **Go/Rust/Java/Ruby**: interfaces Go, impl blocks Rust, interfaces Java, módulos Ruby
+- **PHP avanzado**: traits, interfaces, namespaces
+- **Endpoints Django**: `path()` / `re_path()` en `urls.py`
+- **Endpoints Laravel**: `Route::get/post/put/delete/patch`
+- **Endpoints NestJS**: `@Get/@Post` con `@Controller` base route
+- **Componentes React**: function/arrow components, hooks, TypeScript props
+- **Componentes Vue**: `defineProps`, `defineEmits`, naming por archivo `.vue`
+- **Componentes Svelte**: `export let` props, dispatch events
+- **Dependencias Python**: parsing completo `from X import Y` e `import X`
+- **Dependencias JS/TS**: resolución de alias `@/` y `~/`
+- **Dependencias PHP**: `use Namespace\Class` y `require/include`
+- **30+ frameworks**: Laravel, WordPress, Symfony, NestJS, Celery, DRF, Pydantic, SQLAlchemy, pytest, Gatsby, Remix, Prisma, Drizzle, y más
+
+#### Fase 3 — Innovaciones para agentes IA
+- **CHANGES.yaml**: tracking MD5 por archivo con `.state.json`, identifica changed/added/removed/unchanged entre ejecuciones
+- **SUMMARIES.yaml**: resúmenes semánticos de 1 línea por archivo extraídos de docstrings, comentarios o nombres de funciones
+- **CONTEXT_BUDGET.yaml**: prioridad 3 niveles (critical/important/reference) basada en entry points, endpoints, cantidad de funciones
+- **PROTOCOL.yaml**: reglas multi-agente, orden de lectura obligatorio, reglas de modificación, optimización de tokens, manejo de errores
+
+#### Fase 4 — Infraestructura
+- **ERRORS.yaml dinámico**: analiza patrones try/except/catch en el código fuente y agrega errores comunes del stack
+- **TESTING.yaml dinámico**: detecta archivos de configuración de tests (pytest.ini, jest.config, vitest, cypress, playwright, phpunit), directorios de tests, comandos específicos del framework
+- **29 tests unitarios**: cobertura de validators, scanner, detectors, extractors (Python/PHP/JS, endpoints Flask/Express/Laravel/Django, decoradores, dependencias), generators (todos los 12 YAMLs), templates, e integración completa
+
+### 🔧 Cambios internos
+- Versión unificada a `3.0.0` en `__init__.py`, `main.py`, `install_online.py`
+- `extractors.py` expandido significativamente (~600+ líneas)
+- `detectors.py` expandido (~298 líneas) con detección de 30+ frameworks
+- `all_generators.py` expandido (~888 líneas) con 4 nuevos generadores
+- AGENT_GUIDE.md template actualizado con los 12 YAMLs y nuevo orden de lectura
+
+### 📊 Impacto
+- 12 archivos YAML generados (antes 8) — +50% más contexto para agentes
+- 29 tests unitarios (antes 6) — +383% cobertura
+- Soporte real multi-lenguaje: Python, PHP, JavaScript/TypeScript, Go, Rust, Java, Ruby
+- Detección de 30+ frameworks y herramientas
+- Compatible con Windows, macOS y Linux
+- Zero dependencias externas (Python 3.7+ stdlib only)
+
+---
+
 ## [2.1.0] - 2026-02-23
 
 ### ✨ Mejoras

@@ -1,18 +1,28 @@
-# Instrucciones para Agentes de IA - AI_AGENT_WIZARD
+# Instrucciones para Agentes de IA - AI_AGENT_WIZARD v3.0.0
 
-## Sistema de Indice (.ai/)
+## Sistema de Índice (.ai/)
 Este proyecto tiene un sistema de índice optimizado en `.ai/`.
-ANTES de leer o modificar cualquier archivo fuente, lee:
+ANTES de leer o modificar cualquier archivo fuente, lee en este orden:
 
-1. `.ai/PROJECT_INDEX.yaml` - Mapa completo del proyecto
-2. `.ai/CONVENTIONS.yaml` - Patrones de código
-3. `.ai/TESTING.yaml` - Comandos de validación
-4. `.ai/ERRORS.yaml` - Errores conocidos
-5. `.ai/GIT_WORKFLOW.yaml` - Políticas de git
+1. `.ai/FLOW.yaml` — Cómo usar el sistema de índices (lee primero)
+2. `.ai/PROJECT_INDEX.yaml` — Mapa completo: funciones, endpoints, componentes con líneas exactas
+3. `.ai/GRAPH.yaml` — Grafo de dependencias entre módulos
+4. `.ai/ARCHITECTURE.yaml` — Estructura del proyecto y flujo de ejecución
+5. `.ai/CONVENTIONS.yaml` — Patrones de código
+6. `.ai/TESTING.yaml` — Comandos de validación
+7. `.ai/ERRORS.yaml` — Errores conocidos
+8. `.ai/GIT_WORKFLOW.yaml` — Políticas de git
 
 ## Reglas
 - NUNCA leas un archivo completo si solo necesitas una función
-- SIEMPRE usa el índice para obtener números de línea exactos
+- SIEMPRE usa PROJECT_INDEX.yaml para obtener números de línea exactos
 - SIEMPRE ejecuta validaciones después de modificar código
+- NUNCA modifiques nada dentro de `.ai/` — es generado automáticamente
+- Si el usuario modifica código: `python .ai/update_index.py`
 
-Generado por AI Agent Wizard v1.0.0
+## Arquitectura del Wizard
+- Pipeline: Scanner → Detectors → Extractors → Generators → Install
+- Entry point: `src/main.py`
+- Solo stdlib de Python 3.7+ (cero dependencias externas)
+
+Generado por AI Agent Wizard v3.0.0

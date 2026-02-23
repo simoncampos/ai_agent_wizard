@@ -85,10 +85,16 @@ def detect_frameworks(project_path):
         'build.gradle': ('backend', 'Java/Kotlin (Gradle)'),
         'Gemfile': ('backend', 'Ruby'),
         'composer.json': ('backend', 'PHP (Composer)'),
+        'artisan': ('backend', 'Laravel'),
+        'wp-config.php': ('backend', 'WordPress'),
+        'symfony.lock': ('backend', 'Symfony'),
+        'nest-cli.json': ('backend', 'NestJS'),
+        'celery.py': ('backend', 'Celery'),
         # Frontend
         'package.json': ('frontend', 'Node.js'),
         'next.config.js': ('frontend', 'Next.js'),
         'next.config.mjs': ('frontend', 'Next.js'),
+        'next.config.ts': ('frontend', 'Next.js'),
         'nuxt.config.ts': ('frontend', 'Nuxt'),
         'nuxt.config.js': ('frontend', 'Nuxt'),
         'vite.config.js': ('frontend', 'Vite'),
@@ -97,10 +103,20 @@ def detect_frameworks(project_path):
         'svelte.config.js': ('frontend', 'SvelteKit'),
         'tailwind.config.js': ('frontend', 'Tailwind CSS'),
         'tailwind.config.ts': ('frontend', 'Tailwind CSS'),
+        'gatsby-config.js': ('frontend', 'Gatsby'),
+        'remix.config.js': ('frontend', 'Remix'),
+        # DB
+        'prisma': ('db', 'Prisma'),
+        'drizzle.config.ts': ('db', 'Drizzle'),
         # Otros
         'docker-compose.yml': ('other', 'Docker Compose'),
         'docker-compose.yaml': ('other', 'Docker Compose'),
         'Dockerfile': ('other', 'Docker'),
+        '.github': ('other', 'GitHub Actions'),
+        'Makefile': ('other', 'Make'),
+        'Procfile': ('other', 'Heroku'),
+        'vercel.json': ('other', 'Vercel'),
+        'netlify.toml': ('other', 'Netlify'),
     }
 
     for filename, (category, name) in indicators.items():
@@ -125,10 +141,22 @@ def detect_frameworks(project_path):
                 'express': 'Express', 'fastify': 'Fastify', 'koa': 'Koa',
                 'next': 'Next.js', 'nuxt': 'Nuxt',
                 '@angular/core': 'Angular',
+                '@nestjs/core': 'NestJS',
+                'hapi': 'Hapi',
+                'socket.io': 'Socket.IO',
+                'graphql': 'GraphQL',
+                '@apollo/server': 'Apollo GraphQL',
+                'prisma': 'Prisma',
+                'sequelize': 'Sequelize',
+                'mongoose': 'Mongoose',
+                'typeorm': 'TypeORM',
+                'tailwindcss': 'Tailwind CSS',
             }
             for dep, name in fw_deps.items():
                 if dep in all_deps:
-                    cat = 'frontend' if dep in ['react', 'vue', 'svelte', '@angular/core'] else 'backend'
+                    cat = 'frontend' if dep in ['react', 'vue', 'svelte', '@angular/core', 'tailwindcss'] else 'backend'
+                    if dep in ['prisma', 'sequelize', 'mongoose', 'typeorm']:
+                        cat = 'db'
                     if name not in detections[cat]:
                         detections[cat].append(name)
                         vprint(f"Detectado {name} (package.json)", level=2)
@@ -152,8 +180,48 @@ def detect_frameworks(project_path):
                 if 'django' in content and 'Django' not in detections['backend']:
                     detections['backend'].append('Django')
                     vprint(f"Detectado Django ({req_file})", level=2)
+                if 'djangorestframework' in content and 'DRF' not in detections['backend']:
+                    detections['backend'].append('DRF')
+                    vprint(f"Detectado Django REST Framework ({req_file})", level=2)
+                if 'celery' in content and 'Celery' not in detections['backend']:
+                    detections['backend'].append('Celery')
+                    vprint(f"Detectado Celery ({req_file})", level=2)
+                if 'sqlalchemy' in content and 'SQLAlchemy' not in detections['db']:
+                    detections['db'].append('SQLAlchemy')
+                    vprint(f"Detectado SQLAlchemy ({req_file})", level=2)
+                if 'pydantic' in content and 'Pydantic' not in detections['backend']:
+                    detections['backend'].append('Pydantic')
+                    vprint(f"Detectado Pydantic ({req_file})", level=2)
+                if 'pytest' in content and 'pytest' not in detections['other']:
+                    detections['other'].append('pytest')
+                    vprint(f"Detectado pytest ({req_file})", level=2)
             except IOError as e:
                 warn(f"No se pudo leer {req_file}: {e}", "detect_frameworks")
+
+    # Detectar frameworks PHP en composer.json
+    composer_json = Path(project_path) / 'composer.json'
+    if composer_json.exists():
+        try:
+            with open(composer_json, 'r', encoding='utf-8') as f:
+                composer = json.load(f)
+            all_deps = {}
+            all_deps.update(composer.get('require', {}))
+            all_deps.update(composer.get('require-dev', {}))
+            
+            php_fw = {
+                'laravel/framework': 'Laravel',
+                'symfony/symfony': 'Symfony',
+                'symfony/framework-bundle': 'Symfony',
+                'slim/slim': 'Slim',
+                'cakephp/cakephp': 'CakePHP',
+                'yiisoft/yii2': 'Yii2',
+            }
+            for dep, name in php_fw.items():
+                if dep in all_deps and name not in detections['backend']:
+                    detections['backend'].append(name)
+                    vprint(f"Detectado {name} (composer.json)", level=2)
+        except (json.JSONDecodeError, IOError) as e:
+            warn(f"Error parseando composer.json: {e}", "detect_frameworks")
 
     vprint(f"Frameworks detectados: backend={len(detections['backend'])}, frontend={len(detections['frontend'])}", level=1)
     return detections

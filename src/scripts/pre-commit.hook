@@ -1,0 +1,19 @@
+#!/bin/sh
+# AI Agent Wizard - Pre-commit Hook
+# Regenera índices .ai/ automáticamente antes de cada commit
+# Instalado por AI Agent Wizard
+
+# Verificar que existe el motor
+if [ ! -f ".ai/update_index.py" ]; then
+    exit 0
+fi
+
+# Ejecutar regeneración silenciosa
+python .ai/update_index.py --quiet 2>/dev/null
+
+# Agregar archivos actualizados al commit
+if [ -d ".ai" ]; then
+    git add .ai/*.yaml 2>/dev/null
+fi
+
+exit 0
