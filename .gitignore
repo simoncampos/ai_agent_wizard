@@ -36,8 +36,13 @@ htmlcov/
 *.tmp
 temp/
 
-# Sistema .ai/ generado (no subir cuando se usa el wizard en sí mismo)
+# Sistema .ai/ generado (no subir índices generados en proyectos del usuario)
 .ai/
+# EXCEPTO: mantener los scripts y motor en el repositorio
+!.ai/update.py
+!.ai/update_index.py
+!.ai/pre-commit.hook
+!.ai/src/
 
 # Notas personales
 NOTES.md

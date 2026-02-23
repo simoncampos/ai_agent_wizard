@@ -182,11 +182,19 @@ archivos:
 
 ### Actualizar después de cambios
 
+**Para regenerar índices después de cambios en el código:**
+
 ```bash
-python3 .ai/update_index.py
+python .ai/update_index.py
 ```
 
-Esto reescanea el proyecto y actualiza `PROJECT_INDEX.yaml` sin reinstalar todo.
+**Para actualizar el motor a la última versión:**
+
+```bash
+python .ai/update.py --auto
+```
+
+Ver [docs/UPDATE_GUIDE.md](docs/UPDATE_GUIDE.md) para todas las opciones de actualización y configuración automática con Git hooks.
 
 ---
 
