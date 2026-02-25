@@ -989,3 +989,683 @@ commit_rules:
   - "Include .ai/*.yaml in commits (they should be version-controlled)"
   - "The pre-commit hook auto-updates indexes before each commit"
 """
+
+
+def generate_ai_instructions(project_path, languages, frameworks, files_map, functions, endpoints, components):
+    """
+    Genera AI_INSTRUCTIONS.yaml — instrucciones dinámicas para agentes IA.
+    
+    Combina instrucciones genéricas (patrones, consideraciones) con información
+    dinámicamente detectada del proyecto actual (lenguajes, frameworks, stack).
+    
+    Se regenera automáticamente con cada update_index.py para mantener instrucciones
+    contextualizadas al estado actual del proyecto.
+    
+    Args:
+        project_path: Ruta del proyecto
+        languages: Lista de lenguajes detectados
+        frameworks: Dict {'backend': [...], 'frontend': [...], 'db': [...]}
+        files_map: Dict {filepath: {'type': 'py', 'lines': N}}
+        functions: Dict {filepath: {func_name: line_num}}
+        endpoints: Dict {endpoint_key: {'handler': name, 'file': path, 'line': N}}
+        components: Dict {component_name: {'file': path, 'props': [...]}}
+    
+    Returns:
+        String YAML con instrucciones completas
+    """
+    today = datetime.date.today().isoformat()
+    
+    # Estadísticas del proyecto
+    total_files = len(files_map)
+    total_functions = sum(len(v) for v in functions.values())
+    total_endpoints = len(endpoints)
+    total_components = len(components)
+    total_lines = sum(f['lines'] for f in files_map.values())
+    
+    # Backend, frontend, DB
+    backend_fw = frameworks.get('backend', [])
+    frontend_fw = frameworks.get('frontend', [])
+    db_fw = frameworks.get('db', [])
+    other_fw = frameworks.get('other', [])
+    
+    # Detectar patrones especiales
+    has_django = any('django' in f.lower() for f in backend_fw)
+    has_flask = any('flask' in f.lower() for f in backend_fw)
+    has_fastapi = any('fastapi' in f.lower() for f in backend_fw)
+    has_react = any('react' in f.lower() for f in frontend_fw)
+    has_vue = any('vue' in f.lower() for f in frontend_fw)
+    has_nextjs = any('next' in f.lower() for f in frontend_fw)
+    has_docker = any('docker' in f.lower() for f in other_fw)
+    
+    lines = []
+    
+    # ========================================================================
+    # HEADER
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# AI_INSTRUCTIONS - Instrucciones de Flujo para Agentes de IA")
+    lines.append("# " + "=" * 76)
+    lines.append(f"# GENERADO: {today} (Se actualiza automáticamente con update_index.py)")
+    lines.append("# " + "=" * 76)
+    lines.append("")
+    
+    # ========================================================================
+    # METADATA
+    # ========================================================================
+    lines.append("meta:")
+    lines.append(f"  description: Instrucciones dinámicas contextualizadas al proyecto actual")
+    lines.append(f"  regenerated: '{today}'")
+    lines.append(f"  when_regenerates: Al ejecutar 'python .ai/update_index.py' después de cambios")
+    lines.append(f"  purpose: Guiar agentes IA sobre flujo, patrones y consideraciones específicas del proyecto")
+    lines.append("")
+    
+    # ========================================================================
+    # PROJECT STATISTICS
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# PROJECT STATISTICS")
+    lines.append("# " + "=" * 76)
+    lines.append("statistics:")
+    lines.append(f"  files_total: {total_files}")
+    lines.append(f"  lines_of_code: ~{total_lines}")
+    lines.append(f"  functions_classes: {total_functions}")
+    lines.append(f"  api_endpoints: {total_endpoints}")
+    lines.append(f"  ui_components: {total_components}")
+    lines.append("")
+    
+    # ========================================================================
+    # PROJECT FLOW
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# PROJECT FLOW - 6 Fases del Sistema")
+    lines.append("# " + "=" * 76)
+    lines.append("flow:")
+    lines.append("  phase_1_validation: |")
+    lines.append("    Valida entorno (Python 3.7+, Git, permisos, espacio en disco)")
+    lines.append("    No requiere intervención de IA")
+    lines.append("")
+    lines.append("  phase_2_scanning: |")
+    lines.append("    Itera archivos fuente excluyendo dependencias (node_modules, venv, .git, etc.)")
+    lines.append("    Construye files_map: {filepath: {type, lines}}")
+    lines.append("    Soporta 31 extensiones de código (Python, JS, TS, Go, Rust, Java, PHP, C#, etc.)")
+    lines.append("")
+    lines.append("  phase_3_detection: |")
+    lines.append("    Detecta lenguajes por extensión de archivo")
+    lines.append("    Detecta frameworks por archivos de configuración (package.json, pyproject.toml, etc.)")
+    lines.append("    Mapea stack en 4 categorías: backend, frontend, db, other")
+    lines.append("")
+    lines.append("  phase_4_extraction: |")
+    lines.append("    Extrae información del código CON NÚMEROS DE LÍNEA EXACTOS (1-based)")
+    lines.append("    • extract_functions(): Detecta def/class/fn/struct con decoradores")
+    lines.append("    • extract_endpoints(): Identifica rutas REST (METHOD /route)")
+    lines.append("    • extract_vue_components(): Detecta componentes UI")
+    lines.append("    • extract_dependencies(): Mapea importaciones entre archivos")
+    lines.append("")
+    lines.append("  phase_5_memory_optimization: |")
+    lines.append("    CRÍTICO: Libera contenido completo (lineas de código) tras extracción")
+    lines.append("    Preserva solo: type, lines, funciones/endpoints/componentes")
+    lines.append("    Reduce footprint de 100MB+ a <5MB para proyectos grandes")
+    lines.append("")
+    lines.append("  phase_6_generation: |")
+    lines.append("    Genera 14 archivos YAML con índices y metadata")
+    lines.append("    Copia motor de indexación a .ai/src/")
+    lines.append("    Instala scripts de actualización y git hook automático")
+    lines.append("")
+    
+    # ========================================================================
+    # DATA STRUCTURES
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# DATA STRUCTURES - Formatos Internos")
+    lines.append("# " + "=" * 76)
+    lines.append("data_structures:")
+    lines.append("")
+    lines.append("  files_map: |")
+    lines.append("    Dict {filepath_relativo: {'type': extension, 'lines': count}}")
+    lines.append("    Ejemplo:")
+    lines.append("      'src/main.py': {'type': 'py', 'lines': 372}")
+    lines.append("      'src/core/scanner.py': {'type': 'py', 'lines': 128}")
+    lines.append("    Nota: Se libera 'content' (líneas) después de extracción para optimizar memoria")
+    lines.append("")
+    lines.append("  functions: |")
+    lines.append("    Dict {filepath: {function_name: line_number (1-based)}}")
+    lines.append("    Ejemplo:")
+    lines.append("      'src/main.py':")
+    lines.append("        install: 75")
+    lines.append("        validate_environment: 180")
+    lines.append("        _copy_tree_clean: 35")
+    lines.append("    Convención clases:")
+    lines.append("      'src/validators.py':")
+    lines.append("        'DataValidator.validate': 120")
+    lines.append("")
+    lines.append("  endpoints: |")
+    lines.append("    Dict {endpoint_key: {'handler': func, 'file': path, 'line': N}}")
+    lines.append("    Ejemplo:")
+    lines.append("      'GET /api/users': {'handler': 'get_users', 'file': 'src/routes/users.py', 'line': 45}")
+    lines.append("      'POST /api/users': {'handler': 'create_user', 'file': 'src/routes/users.py', 'line': 60}")
+    lines.append("")
+    lines.append("  components: |")
+    lines.append("    Dict {component_name: {'file': path, 'props': [...], 'emits': [...]}}")
+    lines.append("    Ejemplo:")
+    lines.append("      'UserCard': {'file': 'src/components/UserCard.vue', 'props': ['user', 'editable']}")
+    lines.append("")
+    
+    # ========================================================================
+    # DETECTED STACK (DINÁMICO)
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# DETECTED STACK - Lo que se encontró en THIS proyecto")
+    lines.append("# " + "=" * 76)
+    lines.append("detected_stack:")
+    lines.append(f"  languages: [{', '.join(languages)}]")
+    lines.append(f"  backend: [{', '.join(backend_fw) if backend_fw else 'None'}]")
+    lines.append(f"  frontend: [{', '.join(frontend_fw) if frontend_fw else 'None'}]")
+    lines.append(f"  database: [{', '.join(db_fw) if db_fw else 'No detected'}]")
+    lines.append(f"  devops: [{', '.join(other_fw) if other_fw else 'None'}]")
+    lines.append("")
+    
+    # ========================================================================
+    # CRITICAL PATTERNS
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# CRITICAL PATTERNS - Convenciones de este proyecto")
+    lines.append("# " + "=" * 76)
+    lines.append("critical_patterns:")
+    lines.append("")
+    lines.append("  line_numbering: |")
+    lines.append("    IMPORTANTE: Los números de línea son 1-based (primera línea = 1)")
+    lines.append("    Cuando lees: read_file(file, start_line=45, end_line=60)")
+    lines.append("    Las líneas 45-60 INCLUYEN ambos extremos")
+    lines.append("    No es 0-based como arrays en programación")
+    lines.append("")
+    lines.append("  path_format: |")
+    lines.append("    Todas las rutas usan FORWARD SLASH (/), incluso en Windows")
+    lines.append("    Ejemplo: 'src/core/scanner.py' (NO 'src\\\\core\\\\scanner.py')")
+    lines.append("    Las rutas son RELATIVAS al directorio del proyecto")
+    lines.append("")
+    lines.append("  function_naming: |")
+    lines.append("    Métodos de clase: 'ClassName.method_name'")
+    lines.append("    Funciones normales: 'function_name'")
+    lines.append("    Decoradores Python: '@decorator_name → function_name'")
+    lines.append("    Ejemplo: 'DataValidator.validate', '@dataclass → UserModel'")
+    lines.append("")
+    
+    # ========================================================================
+    # IMPORTANT CONSIDERATIONS
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# IMPORTANT CONSIDERATIONS - Cosas que toda IA debe saber")
+    lines.append("# " + "=" * 76)
+    lines.append("important_considerations:")
+    lines.append("")
+    lines.append("  memory_optimization: |")
+    lines.append("    El contenido completo de archivos (líneas) se LIBERA después de extracción")
+    lines.append("    Por eso PROJECT_INDEX.yaml tiene números de línea pero no contenido")
+    lines.append("    DEBES usar read_file(path, start, end) para leer código específico")
+    lines.append("    No puedes acceder a contenido desde memory, solo desde disk via read_file")
+    lines.append("")
+    lines.append("  excluded_directories: |")
+    lines.append("    El escaneo excluye automáticamente:")
+    lines.append("    Dependencias: node_modules, vendor, .venv, venv")
+    lines.append("    Control versión: .git")
+    lines.append("    Build outputs: dist, build, .next, .nuxt, __pycache__")
+    lines.append("    Por eso no verás estas carpetas en el índice")
+    lines.append("")
+    lines.append("  excluded_files: |")
+    lines.append("    Lock files: package-lock.json, yarn.lock, poetry.lock, Pipfile.lock")
+    lines.append("    Otros: .DS_Store, Thumbs.db (cosas que no son código)")
+    lines.append("    Evita falsos positivos e indexación innecesaria")
+    lines.append("")
+    lines.append("  extraction_via_regex: |")
+    lines.append("    Las funciones se detectan con REGEX, no AST parsing")
+    lines.append("    Esto es rápido pero puede tener falsos positivos")
+    lines.append("    Si no encuentras una función en el índice, busca manualmente en el archivo")
+    lines.append("    Nombres de función en strings/comentarios pueden aparecer en el índice (falsos positivos)")
+    lines.append("")
+    lines.append("  order_of_operations: |")
+    lines.append("    1. Scan ANTES de detect (necesita archivos)")
+    lines.append("    2. Detect ANTES de extract (necesita frameworks para filtros)")
+    lines.append("    3. Extract CON liberación inmediata de content")
+    lines.append("    4. Generate consolida todo a YAML")
+    lines.append("    5. Update_index regenera en el MISMO orden")
+    lines.append("")
+    
+    # ========================================================================
+    # PROJECT-SPECIFIC NOTES (DINÁMICO)
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# PROJECT-SPECIFIC NOTES - Consideraciones de este proyecto")
+    lines.append("# " + "=" * 76)
+    lines.append("project_specific_notes:")
+    
+    if has_django:
+        lines.append("  django_specifics: |")
+        lines.append("    Se detectó Django - archivos clave:")
+        lines.append("    • manage.py - entry point y commands")
+        lines.append("    • settings.py o settings/ - configuración")
+        lines.append("    • urls.py - routing")
+        lines.append("    • models.py - ORM definitions")
+        lines.append("    • views.py - request handlers")
+        lines.append("    • admin.py - admin interface")
+        lines.append("")
+    
+    if has_flask:
+        lines.append("  flask_specifics: |")
+        lines.append("    Se detectó Flask - archivos clave:")
+        lines.append("    • app.py o main.py - instancia de Flask")
+        lines.append("    • routes/ - definición de endpoints")
+        lines.append("    • models/ - ORM o database layer")
+        lines.append("    • Busca @app.route() para endpoints")
+        lines.append("")
+    
+    if has_fastapi:
+        lines.append("  fastapi_specifics: |")
+        lines.append("    Se detectó FastAPI - archivos clave:")
+        lines.append("    • main.py - instancia de FastAPI")
+        lines.append("    • routers/ - definición de endpoints")
+        lines.append("    • schemas/ - Pydantic models (request/response)")
+        lines.append("    • Busca @app.get(), @app.post() para endpoints")
+        lines.append("")
+    
+    if has_react:
+        lines.append("  react_specifics: |")
+        lines.append("    Se detectó React - archivos clave:")
+        lines.append("    • src/components/ - componentes React")
+        lines.append("    • src/hooks/ - custom hooks")
+        lines.append("    • src/pages/ o src/routes/ - page routing")
+        lines.append("    • Busca 'export default' o 'export const'")
+        lines.append("")
+    
+    if has_vue:
+        lines.append("  vue_specifics: |")
+        lines.append("    Se detectó Vue - archivos clave:")
+        lines.append("    • src/components/ - componentes .vue")
+        lines.append("    • Estructura .vue: <template>, <script>, <style>")
+        lines.append("    • Props, emits, composables detectados automáticamente")
+        lines.append("    • Nota: <script setup> alternativo puede no detectarse")
+        lines.append("")
+    
+    if has_nextjs:
+        lines.append("  nextjs_specifics: |")
+        lines.append("    Se detectó Next.js - arquitectura especial:")
+        lines.append("    • app/ o pages/ - file-based routing")
+        lines.append("    • layouts/ - compartido entre rutas")
+        lines.append("    • api/ - API routes (servidor)")
+        lines.append("    • Cada archivo en pages/ o app/ genera una ruta")
+        lines.append("")
+    
+    if has_docker:
+        lines.append("  docker_specifics: |")
+        lines.append("    Se detectó Docker - archivos clave:")
+        lines.append("    • Dockerfile - imagen base, dependencias, build steps")
+        lines.append("    • docker-compose.yml - servicios y networking")
+        lines.append("    • .dockerignore - qué excluir de imagen")
+        lines.append("")
+    
+    if not any([has_django, has_flask, has_fastapi, has_react, has_vue, has_nextjs, has_docker]):
+        lines.append("  generic_notes: |")
+        lines.append("    No se detectaron frameworks especiales conocidos")
+        lines.append("    Lee .ai/ARCHITECTURE.yaml para entender la estructura del proyecto")
+        lines.append("")
+    
+    # ========================================================================
+    # AI BEHAVIOR GUIDELINES
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# AI BEHAVIOR GUIDELINES - Cómo debes actuar")
+    lines.append("# " + "=" * 76)
+    lines.append("ai_behavior:")
+    lines.append("")
+    lines.append("  first_steps: |")
+    lines.append("    1. Lee .ai/FLOW.yaml (cómo usar el sistema)")
+    lines.append("    2. Lee .ai/PROJECT_INDEX.yaml (mapa completo)")
+    lines.append("    3. Consulta .ai/CONTEXT_BUDGET.yaml (prioridad de lectura)")
+    lines.append("    4. Lee esta sección de AI_INSTRUCTIONS.yaml (este archivo)")
+    lines.append("    5. LUEGO comienza a leer código específico")
+    lines.append("")
+    lines.append("  finding_code: |")
+    lines.append("    Cuando buscas una función:")
+    lines.append("    1. Abre .ai/PROJECT_INDEX.yaml y busca el nombre")
+    lines.append("    2. Nota el archivo y número de línea exacto")
+    lines.append("    3. Usa read_file(file, start_line, end_line) para leer SOLO esa sección")
+    lines.append("    4. NO leas archivo completo si solo necesitas una función")
+    lines.append("")
+    lines.append("  understanding_dependencies: |")
+    lines.append("    • Para relaciones entre módulos: lee .ai/GRAPH.yaml")
+    lines.append("    • Para dependencias de un archivo específico: lee PROJECT_INDEX.yaml")
+    lines.append("    • Para importaciones: busca en el archivo con 'import' keyword")
+    lines.append("    • NUNCA revises node_modules/ o .venv/ (se excluyen del índice)")
+    lines.append("")
+    lines.append("  making_changes: |")
+    lines.append("    Antes de modificar:")
+    lines.append("    1. Consulta .ai/CHANGES.yaml para ver qué cambió recientemente")
+    lines.append("    2. Lee .ai/CONVENTIONS.yaml para seguir patrones del proyecto")
+    lines.append("    3. Lee .ai/ERRORS.yaml para evitar problemas conocidos")
+    lines.append("")
+    lines.append("    Después de modificar:")
+    lines.append("    1. Sugiere al usuario ejecutar: python .ai/update_index.py")
+    lines.append("    2. Esto regenera TODOS los índices (incluyendo AI_INSTRUCTIONS.yaml)")
+    lines.append("    3. Consulta .ai/TESTING.yaml para validar cambios")
+    lines.append("    4. Consulta .ai/GIT_WORKFLOW.yaml antes de hacer commits")
+    lines.append("")
+    lines.append("  token_optimization: |")
+    lines.append("    • Lee CONTEXT_BUDGET.yaml NIVEL 1 (CRITICAL) en CADA conversación")
+    lines.append("    • Lee SUMMARIES.yaml para overview de archivos grandes")
+    lines.append("    • Nunca envíes archivos completos en contexto si solo necesitas una función")
+    lines.append("    • Usa números de línea del índice para leer secciones específicas")
+    lines.append("    • Esto reduce tokens en 90-95% comparado a lectura full-file")
+    lines.append("")
+    
+    # ========================================================================
+    # LIMITATIONS & KNOWN ISSUES
+    # ========================================================================
+    lines.append("# " + "=" * 76)
+    lines.append("# LIMITATIONS & KNOWN ISSUES")
+    lines.append("# " + "=" * 76)
+    lines.append("limitations:")
+    lines.append("")
+    lines.append("  regex_limitations: |")
+    lines.append("    Las funciones se detectan con REGEX, no parsing AST completo")
+    lines.append("    Posibles falsos positivos:")
+    lines.append("    • Nombres en strings: \"call_function()\" en comentarios aparece como función")
+    lines.append("    • Sin considera contexto: 'def' en un string se detecta como función")
+    lines.append("    • Métodos dinámicos: __getattr__, eval(), exec() no se capturan bien")
+    lines.append("")
+    lines.append("  extraction_edge_cases: |")
+    lines.append("    Decoradores dinámicos: @decorator_factory() puede fallar")
+    lines.append("    Vue 3 <script setup>: Sintaxis alternativa puede no detectarse")
+    lines.append("    Endpoints con path parameters dinámicos pueden parecer múltiples rutas")
+    lines.append("    Componentes asincrónicos no siempre detectados")
+    lines.append("")
+    lines.append("  performance_considerations: |")
+    lines.append("    Proyectos >10k archivos: El escaneo puede tardar 1-2 minutos")
+    lines.append("    Proyectos con muchas dependencias: Excluir node_modules acelera significativamente")
+    lines.append("    Para monorepos: Cada workspace se analiza por separado")
+    lines.append("")
+    lines.append("  when_to_regenerate: |")
+    lines.append("    Ejecuta 'python .ai/update_index.py' después de:")
+    lines.append("    • Agregar nuevas funciones/componentes/endpoints")
+    lines.append("    • Cambiar frameworks o dependencias")
+    lines.append("    • Mover archivos entre carpetas")
+    lines.append("    • Eliminar archivos o directores")
+    lines.append("    La pre-commit hook lo hace automáticamente si Git está configurado")
+    lines.append("")
+    
+    # ========================================================================
+    # FOOTER
+    lines.append("# " + "=" * 76)
+    lines.append("# Este archivo se regenera automáticamente con update_index.py")
+    lines.append("# Las secciones DINÁMICAS se actualizan; las ESTÁTICAS se preservan")
+    lines.append("# Puedes agregar 'custom_considerations' que se mantendrán en regeneraciones")
+    lines.append("# " + "=" * 76)
+    
+    return '\n'.join(lines) + '\n'
+
+
+def _parse_yaml_sections(content):
+    """
+    Parser robusto de secciones YAML de nivel raíz.
+    
+    Divide el contenido en bloques por cada key de nivel raíz (sin indentación).
+    Preserva comentarios de sección como parte del bloque que les sigue.
+    
+    Returns:
+        Dict {section_name: full_text_including_comments}
+        List de nombres en orden de aparición
+    """
+    sections = {}
+    order = []
+    current_key = None
+    current_lines = []
+    pending_comments = []
+    
+    for line in content.split('\n'):
+        stripped = line.strip()
+        
+        # Detectar key de nivel raíz: empieza en columna 0, no es comentario, y tiene ':'
+        if line and not line[0].isspace() and not line.startswith('#') and ':' in line:
+            key = line.split(':')[0].strip()
+            
+            # Guardar bloque anterior
+            if current_key:
+                sections[current_key] = '\n'.join(current_lines)
+                order.append(current_key)
+            
+            # Iniciar nuevo bloque con comentarios pendientes
+            current_key = key
+            current_lines = pending_comments + [line]
+            pending_comments = []
+        
+        elif stripped.startswith('#') and stripped.startswith('# ==='):
+            # Comentarios de sección (separadores) se asocian al siguiente bloque
+            if current_key:
+                # Guardar bloque actual
+                sections[current_key] = '\n'.join(current_lines)
+                order.append(current_key)
+                current_key = None
+                current_lines = []
+            pending_comments.append(line)
+        
+        elif stripped.startswith('#') and current_key is None:
+            # Comentarios sueltos antes de cualquier sección
+            pending_comments.append(line)
+        
+        else:
+            if current_key:
+                current_lines.append(line)
+            else:
+                pending_comments.append(line)
+    
+    # Guardar último bloque
+    if current_key:
+        sections[current_key] = '\n'.join(current_lines)
+        order.append(current_key)
+    
+    return sections, order
+
+
+def merge_ai_instructions(ai_dir, new_instructions):
+    """
+    Hace merge inteligente de AI_INSTRUCTIONS.yaml preservando consideraciones antiguas.
+    
+    Estrategia:
+    - Secciones ESTÁTICAS se preservan del archivo anterior (no se reconstruyen)
+    - Secciones DINÁMICAS se regeneran con datos actuales del proyecto
+    - Sección CUSTOM (custom_considerations) siempre se mantiene intacta
+    - Sección _changelog registra un historial básico de cambios relevantes
+    
+    Args:
+        ai_dir: Ruta de .ai/
+        new_instructions: String YAML generado recientemente
+    
+    Returns:
+        String YAML merged (preserva antiguo + actualiza nuevo)
+    """
+    old_file = os.path.join(str(ai_dir), 'AI_INSTRUCTIONS.yaml')
+    
+    # Si no existe archivo anterior, agregar changelog inicial y retornar
+    if not os.path.exists(old_file):
+        today = datetime.date.today().isoformat()
+        initial_changelog = f"""\n# {'=' * 76}
+# CHANGELOG - Historial de cambios relevantes
+# {'=' * 76}
+_changelog:
+  - date: '{today}'
+    type: initial
+    summary: Generación inicial de AI_INSTRUCTIONS.yaml
+    details: |
+      Archivo creado por primera vez durante instalación.
+      Todas las secciones generadas desde cero.
+
+# {'=' * 76}
+# CUSTOM CONSIDERATIONS - Consideraciones del proyecto (PERSISTENTES)
+# {'=' * 76}
+custom_considerations:
+  _note: |
+    Sección reservada para consideraciones específicas del proyecto.
+    Agrega aquí cualquier nota importante que deba persistir entre actualizaciones.
+    Esta sección NUNCA se sobreescribe automáticamente.
+    Ejemplo:
+      warning_deprecated_pattern: |
+        Evitar usar pattern X porque causa bug Y
+      performance_tip: |
+        La función Z es lenta con datasets >100k, considerar caching
+"""
+        return new_instructions.rstrip() + initial_changelog
+    
+    try:
+        with open(old_file, 'r', encoding='utf-8') as f:
+            old_content = f.read()
+    except Exception:
+        return new_instructions
+    
+    # ========================================================================
+    # CONFIGURACIÓN DE SECCIONES
+    # ========================================================================
+    
+    # Estáticas: se preservan del archivo antiguo (no se reconstruyen)
+    static_keys = {
+        'flow', 'data_structures', 'critical_patterns',
+        'important_considerations', 'ai_behavior', 'limitations'
+    }
+    
+    # Dinámicas: siempre se regeneran con datos nuevos del proyecto
+    dynamic_keys = {
+        'meta', 'statistics', 'detected_stack', 'project_specific_notes'
+    }
+    
+    # Protegidas: NUNCA se tocan, siempre del archivo antiguo
+    protected_keys = {'custom_considerations', '_changelog'}
+    
+    # ========================================================================
+    # PARSEAR AMBAS VERSIONES
+    # ========================================================================
+    old_sections, old_order = _parse_yaml_sections(old_content)
+    new_sections, new_order = _parse_yaml_sections(new_instructions)
+    
+    # ========================================================================
+    # DETECTAR CAMBIOS PARA CHANGELOG
+    # ========================================================================
+    changes = []
+    today = datetime.date.today().isoformat()
+    
+    # Comparar estadísticas
+    old_stats = old_sections.get('statistics', '')
+    new_stats = new_sections.get('statistics', '')
+    if old_stats != new_stats and old_stats:
+        changes.append('Estadísticas del proyecto actualizadas')
+    
+    # Comparar stack
+    old_stack = old_sections.get('detected_stack', '')
+    new_stack = new_sections.get('detected_stack', '')
+    if old_stack != new_stack and old_stack:
+        changes.append('Stack tecnológico re-detectado')
+    
+    # Comparar notas específicas
+    old_notes = old_sections.get('project_specific_notes', '')
+    new_notes = new_sections.get('project_specific_notes', '')
+    if old_notes != new_notes and old_notes:
+        changes.append('Notas específicas del proyecto actualizadas')
+    
+    # Detectar secciones nuevas
+    for key in new_order:
+        if key not in old_sections and key not in protected_keys:
+            changes.append(f'Nueva sección agregada: {key}')
+    
+    # ========================================================================
+    # CONSTRUIR VERSIÓN MERGED
+    # ========================================================================
+    
+    # Orden canónico de secciones
+    canonical_order = [
+        'meta', 'statistics', 'flow', 'data_structures',
+        'detected_stack', 'critical_patterns', 'important_considerations',
+        'project_specific_notes', 'ai_behavior', 'limitations',
+        '_changelog', 'custom_considerations'
+    ]
+    
+    merged_parts = []
+    
+    for key in canonical_order:
+        content = None
+        
+        if key in protected_keys:
+            # PROTEGIDAS: siempre del antiguo
+            content = old_sections.get(key)
+        elif key in static_keys:
+            # ESTÁTICAS: preferir antiguo, fallback a nuevo
+            content = old_sections.get(key) or new_sections.get(key)
+        elif key in dynamic_keys:
+            # DINÁMICAS: siempre del nuevo
+            content = new_sections.get(key) or old_sections.get(key)
+        
+        if content:
+            merged_parts.append(content.rstrip())
+    
+    # ========================================================================
+    # ACTUALIZAR CHANGELOG
+    # ========================================================================
+    if changes:
+        old_changelog = old_sections.get('_changelog', '_changelog:')
+        
+        # Construir nueva entrada
+        new_entry_lines = []
+        new_entry_lines.append(f"  - date: '{today}'")
+        new_entry_lines.append(f"    type: update")
+        new_entry_lines.append(f"    summary: Regeneración de índices")
+        new_entry_lines.append(f"    changes:")
+        for change in changes:
+            new_entry_lines.append(f"      - \"{change}\"")
+        new_entry = '\n'.join(new_entry_lines)
+        
+        # Insertar después de "_changelog:" 
+        if '_changelog:' in old_changelog:
+            # Agregar nueva entrada justo después de _changelog:
+            changelog_header = old_changelog.split('\n')[0]  # "_changelog:"
+            changelog_body = '\n'.join(old_changelog.split('\n')[1:])
+            updated_changelog = f"{changelog_header}\n{new_entry}\n{changelog_body}"
+        else:
+            updated_changelog = f"_changelog:\n{new_entry}"
+        
+        # Reemplazar en merged_parts
+        for i, part in enumerate(merged_parts):
+            if part.lstrip().startswith('_changelog:'):
+                merged_parts[i] = updated_changelog.rstrip()
+                break
+        else:
+            # No había changelog, agregarlo
+            merged_parts.append(updated_changelog.rstrip())
+    
+    # Si no hay changelog en merged, agregar uno básico
+    has_changelog = any(p.lstrip().startswith('_changelog:') for p in merged_parts)
+    if not has_changelog:
+        merged_parts.append(f"_changelog:\n  - date: '{today}'\n    type: initial\n    summary: Generación inicial")
+    
+    # Si no hay custom_considerations, agregar plantilla
+    has_custom = any(p.lstrip().startswith('custom_considerations:') for p in merged_parts)
+    if not has_custom:
+        merged_parts.append(
+            "custom_considerations:\n"
+            "  _note: |\n"
+            "    Sección reservada para consideraciones específicas del proyecto.\n"
+            "    Agrega aquí notas que deban persistir entre actualizaciones.\n"
+            "    Esta sección NUNCA se sobreescribe automáticamente."
+        )
+    
+    # ========================================================================
+    # FOOTER
+    # ========================================================================
+    footer = [
+        "",
+        "# " + "=" * 76,
+        "# MERGE INFO",
+        "# " + "=" * 76,
+        f"# Última actualización: {today}",
+        f"# Cambios detectados: {len(changes) if changes else 'ninguno (primera generación)'}",
+        "# Estrategia: Secciones estáticas preservadas, dinámicas regeneradas",
+        "# custom_considerations y _changelog NUNCA se sobreescriben",
+        "# " + "=" * 76
+    ]
+    
+    result = '\n\n'.join(merged_parts) + '\n' + '\n'.join(footer) + '\n'
+    return result

@@ -101,6 +101,7 @@ El wizard crea un sistema completo en la carpeta `.ai/`:
 | Archivo | Descripción |
 |---------|-------------|
 | `PROJECT_INDEX.yaml` | 📚 Índice completo: archivos, funciones, endpoints, componentes |
+| `AI_INSTRUCTIONS.yaml` | 🤖 Instrucciones dinámicas de flujo para agentes IA (regeneradas con update) |
 | `CONVENTIONS.yaml` | 📐 Patrones de código y convenciones del proyecto |
 | `TESTING.yaml` | 🧪 Comandos de validación y smoke tests |
 | `ERRORS.yaml` | 🐛 Errores conocidos con soluciones documentadas |
@@ -341,5 +342,5 @@ MIT License - Ver [LICENSE](LICENSE)
 
 Desarrollado como herramienta de optimización para interacción con Claude Sonnet 4.5, GPT-4 y otros agentes de IA.
 
-**Versión:** 3.0.0  
+**Versión:** 4.0.0  
 **Generado por:** AI Agent Wizard

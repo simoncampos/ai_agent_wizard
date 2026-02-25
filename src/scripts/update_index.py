@@ -37,7 +37,8 @@ from generators.all_generators import (
     generate_project_index, generate_all_yamls,
     generate_architecture_yaml, generate_flow_yaml, generate_graph_yaml,
     generate_changes_yaml, generate_summaries_yaml,
-    generate_context_budget_yaml, generate_protocol_yaml
+    generate_context_budget_yaml, generate_protocol_yaml,
+    generate_ai_instructions, merge_ai_instructions
 )
 
 
@@ -130,6 +131,14 @@ def update_all(quiet=False, verbose=False):
     content = generate_protocol_yaml()
     _write(ai_dir / 'PROTOCOL.yaml', content)
     generated.append('PROTOCOL.yaml')
+
+    # AI_INSTRUCTIONS.yaml (con merge inteligente para preservar consideraciones)
+    ai_instr_content = generate_ai_instructions(
+        str(project_dir), languages, frameworks, files_map, functions, endpoints, components
+    )
+    ai_instr_merged = merge_ai_instructions(str(ai_dir), ai_instr_content)
+    _write(ai_dir / 'AI_INSTRUCTIONS.yaml', ai_instr_merged)
+    generated.append('AI_INSTRUCTIONS.yaml')
 
     # Resumen
     total_funcs = sum(len(v) for v in functions.values())

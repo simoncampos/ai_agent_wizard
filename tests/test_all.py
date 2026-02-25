@@ -1,5 +1,5 @@
 """
-Tests unitarios del AI Agent Wizard v3.0.0
+Tests unitarios del AI Agent Wizard v4.0.0
 """
 
 import unittest

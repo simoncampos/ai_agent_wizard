@@ -42,7 +42,7 @@ GITHUB_BRANCH = "main"
 def print_banner():
     """Muestra banner de presentación"""
     print("\n" + "=" * 70)
-    print("  AI AGENT WIZARD - ACTUALIZADOR DEL CORE v3.0.0")
+    print("  AI AGENT WIZARD - ACTUALIZADOR DEL CORE v4.0.0")
     print("  Actualiza sistema .ai/ y regenera índices automáticamente")
     print("=" * 70 + "\n")
 
@@ -290,7 +290,7 @@ def main():
             print("  " + "=" * 70)
             print(f"\n  Actualizado: {', '.join(updated)}")
             print(f"  Índices: regenerados automáticamente")
-            print(f"  Versión core: v3.0.0\n")
+            print(f"  Versión core: v4.0.0\n")
         else:
             print("  ⚠️  ACTUALIZACIÓN CON ERRORES")
             print("  " + "=" * 70)

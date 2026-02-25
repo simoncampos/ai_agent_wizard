@@ -1,7 +1,7 @@
 # ============================================================================
 # AI_AGENT_WIZARD - AI PROJECT INDEX
 # ============================================================================
-# LAST_UPDATED: 2026-02-23
+# LAST_UPDATED: 2026-02-25
 # ============================================================================
 
 meta:
@@ -17,16 +17,19 @@ meta:
 files:
   AGENT_GUIDE.md:
     type: md
-    lines: ~38
+    lines: ~75
   README.md:
     type: md
-    lines: ~345
+    lines: ~346
+  RELEASE_NOTES_4.0.0.md:
+    type: md
+    lines: ~236
   docs\AGENT_GUIDE.md:
     type: md
     lines: ~33
   docs\CHANGELOG.md:
     type: md
-    lines: ~420
+    lines: ~463
   docs\IMPLEMENTATION_SUMMARY.md:
     type: md
     lines: ~261
@@ -95,16 +98,16 @@ files:
     lines: ~3
   src\generators\all_generators.py:
     type: py
-    lines: ~991
+    lines: ~1671
   src\main.py:
     type: py
-    lines: ~371
+    lines: ~417
   src\scripts\update.py:
     type: py
     lines: ~307
   src\scripts\update_index.py:
     type: py
-    lines: ~164
+    lines: ~173
   src\templates\__init__.py:
     type: py
     lines: ~17
@@ -187,12 +190,15 @@ functions:
     _extract_file_summary: 784
     generate_context_budget_yaml: 856
     generate_protocol_yaml: 927
+    generate_ai_instructions: 994
+    _parse_yaml_sections: 1405
+    merge_ai_instructions: 1467
   src\main.py:
-    _copy_tree_clean: 36
-    _copy_file_safe: 43
-    _install_git_hook: 51
-    install: 73
-    main: 336
+    _copy_tree_clean: 37
+    _copy_file_safe: 44
+    _install_git_hook: 52
+    install: 74
+    main: 382
   src\scripts\update.py:
     print_banner: 42
     download_repository: 50
@@ -203,8 +209,8 @@ functions:
     cleanup: 224
     main: 232
   src\scripts\update_index.py:
-    update_all: 44
-    _write: 145
+    update_all: 45
+    _write: 154
   src\templates\project_templates.py:
     get_template: 59
     list_templates: 64

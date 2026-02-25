@@ -1,4 +1,4 @@
-# Instrucciones para Agentes de IA - AI_AGENT_WIZARD v3.0.0
+# Instrucciones para Agentes de IA - AI_AGENT_WIZARD v4.0.0
 
 ## Sistema de Índice (.ai/)
 Este proyecto tiene un sistema de índice optimizado en `.ai/`.
@@ -25,4 +25,4 @@ ANTES de leer o modificar cualquier archivo fuente, lee en este orden:
 - Entry point: `src/main.py`
 - Solo stdlib de Python 3.7+ (cero dependencias externas)
 
-Generado por AI Agent Wizard v3.0.0
+Generado por AI Agent Wizard v4.0.0

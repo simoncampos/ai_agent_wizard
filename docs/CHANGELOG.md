@@ -1,5 +1,48 @@
 # CHANGELOG
 
+## [4.0.0] - 2026-02-25
+
+### ✨ Major Features
+- **AI_INSTRUCTIONS.yaml**: Nuevo archivo dinámico de instrucciones de flujo para agentes IA
+  - Regenerado automáticamente con cada `update_index.py`
+  - Combina información genérica (patrones, consideraciones) con dinámica (stack detectado, notas específicas)
+  - Secciones estáticas preservadas entre generaciones, dinámicas actualizadas
+  - Soporta sección `custom_considerations` para notas del proyecto que persisten
+
+### 🔄 Merge Inteligente
+- Nueva función `merge_ai_instructions()` en `all_generators.py`
+  - Preserva secciones estáticas (project_flow, data_structures, critical_patterns, limitations, ai_behavior)
+  - Actualiza secciones dinámicas (statistics, detected_stack, project_specific_notes)
+  - Mantiene sección custom_considerations agregada por usuarios
+  - Genera _merge_info con información de cuándo se actualizó y qué estrategia se usó
+
+### 🎯 Contenido AI_INSTRUCTIONS.yaml
+- **meta**: Información de generación y propósito
+- **statistics**: Números de proyecto (archivos, líneas, funciones, endpoints, componentes)
+- **project_flow**: Descripción de las 6 fases del wizard
+- **data_structures**: Formato de files_map, functions dict, endpoints, components
+- **detected_stack**: Lo que se encontró en THIS proyecto (dinámico)
+- **critical_patterns**: Convenciones (líneas 1-based, rutas con /, convenciones de naming)
+- **important_considerations**: Optimizaciones de memoria, exclusiones, edge cases
+- **project_specific_notes**: Consideraciones específicas detectadas (Django, Flask, FastAPI, React, Vue, Next.js, Docker, etc.)
+- **custom_considerations**: Sección reservada para notas del proyecto
+- **ai_behavior**: Cómo deben actuar agentes IA (lectura, búsqueda, cambios, optimización)
+- **limitations**: Limitaciones de la extracción regex y cuándo regenerar
+
+### 🔧 Cambios Internos
+- `all_generators.py`: +450 líneas para `generate_ai_instructions()` y `merge_ai_instructions()`
+- `src/main.py`: Integración de AI_INSTRUCTIONS en instalación
+- `src/scripts/update_index.py`: Integración de merge en regeneraciones
+- Versión actualizada a `4.0.0`
+
+### 🚀 Beneficios para Agentes IA
+- Instrucciones contextualizadas actualizadas automáticamente
+- Mejora en comprensión del proyecto sin leer código base
+- Consideraciones preservadas entre cambios del código
+- Reduce necesidad de preguntas sobre patrones/flujo del proyecto
+
+---
+
 ## [3.0.0] - 2025-06-18
 
 ### 💥 Breaking Changes
