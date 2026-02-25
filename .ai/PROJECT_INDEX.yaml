@@ -17,7 +17,7 @@ meta:
 files:
   AGENT_GUIDE.md:
     type: md
-    lines: ~75
+    lines: ~150
   README.md:
     type: md
     lines: ~346
@@ -101,7 +101,7 @@ files:
     lines: ~1671
   src\main.py:
     type: py
-    lines: ~417
+    lines: ~459
   src\scripts\update.py:
     type: py
     lines: ~307
@@ -198,7 +198,7 @@ functions:
     _copy_file_safe: 44
     _install_git_hook: 52
     install: 74
-    main: 382
+    main: 424
   src\scripts\update.py:
     print_banner: 42
     download_repository: 50

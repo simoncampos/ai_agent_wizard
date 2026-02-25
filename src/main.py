@@ -265,6 +265,48 @@ def install(project_path, auto_mode=False, verbose=False):
 
 ---
 
+## 🧠 QUÉ ES ESTE PROYECTO Y QUÉ HACE (Contexto de Negocio)
+
+> **SECCIÓN PENDIENTE DE REDACCIÓN POR UNA IA.**
+> Un programa no puede inferir el propósito de negocio, las reglas inamovibles ni el "por qué" de un proyecto — solo una IA que lee y comprende el código puede hacerlo.
+
+### Instrucciones para el primer agente IA que trabaje en este proyecto:
+
+**Debes completar esta sección** la primera vez que interactúes con este proyecto. Lee el código fuente, entiende qué hace, y redacta aquí:
+
+1. **Propósito**: ¿Qué problema resuelve este software? ¿Para quién? (ej: "ETL que descarga datos de X, los transforma y los carga en Y")
+2. **Flujo principal**: ¿Cuáles son los pasos que ejecuta de principio a fin? (no qué funciones llama, sino qué *hace* en términos de negocio)
+3. **Reglas de negocio inamovibles**: ¿Qué restricciones o reglas no deben violarse nunca? (ej: "los montos siempre se redondean a 2 decimales", "nunca se elimina un registro, solo se marca como inactivo")
+4. **Qué NO hace**: Para evitar confusiones sobre el alcance.
+5. **Entidades principales**: ¿Cuáles son los conceptos clave del dominio? (ej: "Pedido", "Cliente", "Factura")
+
+**Formato sugerido:**
+
+```
+### Propósito
+[Descripción clara del problema que resuelve y para quién]
+
+### Flujo principal
+1. [Paso 1 en términos de negocio]
+2. [Paso 2 en términos de negocio]
+...
+
+### Reglas de negocio inamovibles
+1. [Regla que nunca debe violarse]
+2. [Otra regla fundamental]
+...
+
+### Qué NO hace
+- [Algo que podría confundirse pero está fuera del alcance]
+
+### Entidades principales
+- **[Entidad]**: [Qué representa y por qué importa]
+```
+
+**IMPORTANTE**: Una vez redactada esta sección, no la borres ni la regeneres. Este conocimiento de negocio es valioso y no se puede extraer automáticamente del código.
+
+---
+
 ## IMPORTANTE: Lee esto antes de hacer cualquier cosa
 Este proyecto YA tiene un sistema de índice instalado en `.ai/`.
 NO lo creaste tú. NO lo modifiques. NO intentes recrearlo.
