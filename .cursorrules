@@ -1,28 +1,34 @@
-# Instrucciones para Agentes de IA - AI_AGENT_WIZARD v4.0.0
+# Instrucciones para Agentes de IA - AI_AGENT_WIZARD v5.0.0
 
-## Sistema de Índice (.ai/)
-Este proyecto tiene un sistema de índice optimizado en `.ai/`.
+## Sistema de Indice (.ai/)
+Este proyecto tiene un sistema de indice optimizado en `.ai/`.
 ANTES de leer o modificar cualquier archivo fuente, lee en este orden:
 
-1. `.ai/FLOW.yaml` — Cómo usar el sistema de índices (lee primero)
-2. `.ai/PROJECT_INDEX.yaml` — Mapa completo: funciones, endpoints, componentes con líneas exactas
-3. `.ai/GRAPH.yaml` — Grafo de dependencias entre módulos
-4. `.ai/ARCHITECTURE.yaml` — Estructura del proyecto y flujo de ejecución
-5. `.ai/CONVENTIONS.yaml` — Patrones de código
-6. `.ai/TESTING.yaml` — Comandos de validación
-7. `.ai/ERRORS.yaml` — Errores conocidos
-8. `.ai/GIT_WORKFLOW.yaml` — Políticas de git
+1. `.ai/CONTEXT_ANCHOR.yaml` -- Resumen ultra-compacto del proyecto (LEE PRIMERO)
+2. `.ai/QUICK_CONTEXT.yaml` -- Respuestas pre-calculadas para tareas comunes
+3. `.ai/FLOW.yaml` -- Como usar el sistema de indices
+4. `.ai/PROJECT_INDEX.yaml` -- Mapa completo: funciones, endpoints, componentes con lineas exactas
+5. `.ai/CALL_GRAPH.yaml` -- Grafo de llamadas entre funciones
+6. `.ai/TYPES.yaml` -- Tipos, interfaces, modelos de datos
+7. `.ai/GRAPH.yaml` -- Grafo de dependencias entre modulos
+8. `.ai/ARCHITECTURE.yaml` -- Estructura del proyecto y flujo de ejecucion
+9. `.ai/CONVENTIONS.yaml` -- Patrones de codigo
+10. `.ai/TESTING.yaml` -- Comandos de validacion
+11. `.ai/ERRORS.yaml` -- Errores conocidos
+12. `.ai/GIT_WORKFLOW.yaml` -- Politicas de git
 
 ## Reglas
-- NUNCA leas un archivo completo si solo necesitas una función
-- SIEMPRE usa PROJECT_INDEX.yaml para obtener números de línea exactos
-- SIEMPRE ejecuta validaciones después de modificar código
-- NUNCA modifiques nada dentro de `.ai/` — es generado automáticamente
-- Si el usuario modifica código: `python .ai/update_index.py`
+- NUNCA leas un archivo completo si solo necesitas una funcion
+- SIEMPRE usa PROJECT_INDEX.yaml para obtener numeros de linea exactos
+- SIEMPRE ejecuta validaciones despues de modificar codigo
+- NUNCA modifiques nada dentro de `.ai/` -- es generado automaticamente
+- Si el usuario modifica codigo: `python .ai/update_index.py`
+- Durante fixes: NO hacer commits ni actualizar indices hasta que el usuario lo pida
+- Primera respuesta: Completa la seccion de negocio en AGENT_GUIDE.md
 
 ## Arquitectura del Wizard
-- Pipeline: Scanner → Detectors → Extractors → Generators → Install
+- Pipeline: Scanner -> Detectors -> Extractors -> Generators -> Install
 - Entry point: `src/main.py`
 - Solo stdlib de Python 3.7+ (cero dependencias externas)
 
-Generado por AI Agent Wizard v4.0.0
+Generado por AI Agent Wizard v5.0.0

@@ -29,6 +29,9 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/simoncampos/ai_agent_w
 - 🐛 **Registro de errores** - Mantiene historial de problemas y soluciones
 - 🔄 **Actualización incremental** - Reescanea cambios sin reinstalar
 - 🧠 **Auto-documentado** - El wizard se aplica a sí mismo su propio sistema
+- 🧩 **Grafo de llamadas** - Mapa caller→callee entre funciones del proyecto
+- 📎 **Persistencia de contexto** - 4 capas para que el agente nunca pierda el hilo
+- 🛠️ **Archivos IDE** - CLAUDE.md, copilot-instructions.md, .windsurfrules autogenerados
 
 ---
 
@@ -101,12 +104,24 @@ El wizard crea un sistema completo en la carpeta `.ai/`:
 | Archivo | Descripción |
 |---------|-------------|
 | `PROJECT_INDEX.yaml` | 📚 Índice completo: archivos, funciones, endpoints, componentes |
-| `AI_INSTRUCTIONS.yaml` | 🤖 Instrucciones dinámicas de flujo para agentes IA (regeneradas con update) |
+| `AI_INSTRUCTIONS.yaml` | 🤖 Instrucciones dinámicas de flujo para agentes IA |
+| `CONTEXT_ANCHOR.yaml` | ⚓ Resumen ultra-compacto del proyecto (< 50 líneas) |
+| `CALL_GRAPH.yaml` | 📞 Grafo de llamadas caller→callee entre funciones |
+| `TYPES.yaml` | 📝 Tipos, interfaces, modelos de datos con campos |
+| `DOCSTRINGS.yaml` | 📖 Documentación inline por función con params/returns |
+| `CONFIG_MAP.yaml` | ⚙️ Variables de entorno y archivos de configuración |
+| `ENTRY_POINTS.yaml` | 🚦 Boot sequence, request lifecycle, read order |
+| `PATTERNS.yaml` | 🎭 Patrones de diseño y convenciones detectadas |
+| `QUICK_CONTEXT.yaml` | ⚡ Respuestas pre-calculadas para tareas comunes |
 | `CONVENTIONS.yaml` | 📐 Patrones de código y convenciones del proyecto |
 | `TESTING.yaml` | 🧪 Comandos de validación y smoke tests |
 | `ERRORS.yaml` | 🐛 Errores conocidos con soluciones documentadas |
 | `GIT_WORKFLOW.yaml` | 🔀 Políticas de git, tipos de commits y versionado |
-| `AGENT_GUIDE.md` | 🤖 Instrucciones para agentes de IA (Claude, Copilot, etc.) |
+| `PROTOCOL.yaml` | 📜 Workflow rules y obligaciones del agente |
+| `AGENT_GUIDE.md` | 🤖 Contexto de negocio persistente (completado por agente) |
+| `CLAUDE.md` | 🤖 Instrucciones para Claude Code |
+| `.windsurfrules` | 🌊 Instrucciones para Windsurf |
+| `copilot-instructions.md` | 🐙 Instrucciones para GitHub Copilot |
 | `.cursorrules` | ⚙️ Symlink a AGENT_GUIDE.md para Cursor IDE |
 | `update_index.py` | 🔄 Script para actualizar el índice después de cambios |
 
@@ -121,9 +136,9 @@ AI_AGENT_WIZARD/
 │   │   ├── validators.py        # Validación de entorno (Python, Git, permisos)
 │   │   ├── scanner.py           # Escaneo de archivos con progreso
 │   │   ├── detectors.py         # Detección de lenguajes/frameworks
-│   │   └── extractors.py        # Extracción de funciones/endpoints/componentes
+│   │   └── extractors.py        # Extracción de funciones/endpoints/componentes/tipos/call graph
 │   ├── generators/              # Generación de contenido
-│   │   └── all_generators.py   # Crea todos los archivos YAML
+│   │   └── all_generators.py   # Crea todos los archivos YAML (20+ índices)
 │   ├── templates/               # Templates de proyectos
 │   │   └── project_templates.py # 12 tipos: Python/Flask/Django, Node, React, Vue...
 │   ├── utils/                   # Utilidades
@@ -131,12 +146,12 @@ AI_AGENT_WIZARD/
 │   └── main.py                  # Entry point principal
 │
 ├── docs/                        # 📚 Documentación
+│   ├── CHANGELOG.md             # Historial de cambios detallado
 │   ├── INSTALL_GUIDE.md         # Guía de instalación simplificada
 │   ├── INSTALL_ONLINE.md        # Documentación técnica del instalador
 │   ├── QUICKSTART_ONLINE.md     # Guía rápida de referencia
-│   ├── AGENT_GUIDE.md                # Instrucciones para agentes de IA
-│   ├── IMPLEMENTATION_SUMMARY.md # Resumen de implementación
-│   └── READY_TO_PUSH.md         # Checklist de publicación
+│   ├── AGENT_GUIDE.md           # Instrucciones para agentes de IA
+│   └── UPDATE_GUIDE.md          # Guía de actualización
 │
 ├── scripts/                     # 🛠️ Scripts de ayuda
 │   ├── git_push.ps1             # Push automático (PowerShell)
@@ -145,11 +160,10 @@ AI_AGENT_WIZARD/
 │   └── configure_online_installer.py # Configurador del instalador
 │
 ├── tests/                       # 🧪 Tests
-│   └── test_all.py              # Tests unitarios (7 tests)
+│   └── test_all.py              # Tests unitarios (44 tests)
 │
 ├── install_online.py            # 🌐 Instalador (online y local)
 ├── README.md                    # 📖 Este archivo
-├── CHANGELOG.md                 # 📝 Historial de cambios (movido a docs/)
 ├── LICENSE                      # ⚖️ Licencia MIT
 └── requirements.txt             # 📦 Dependencias (ninguna)
 ```
@@ -207,12 +221,15 @@ Ejecutar todos los tests:
 python3 tests/test_all.py
 ```
 
-Tests incluidos:
+Tests incluidos (44 tests):
 - ✅ Validación de Python 3.7+
-- ✅ Detección de Git
+- ✅ Detección de Git y permisos
 - ✅ Escaneo de archivos
-- ✅ Detección de lenguajes
-- ✅ Extracción de funciones
+- ✅ Detección de lenguajes y frameworks
+- ✅ Extracción de funciones, endpoints, componentes
+- ✅ Extracción de call graph, tipos, docstrings, config, patterns
+- ✅ Generación de todos los índices YAML (20+)
+- ✅ Flujo de instalación completo (integración)
 - ✅ Sugerencia de templates
 
 ---
@@ -342,5 +359,5 @@ MIT License - Ver [LICENSE](LICENSE)
 
 Desarrollado como herramienta de optimización para interacción con Claude Sonnet 4.5, GPT-4 y otros agentes de IA.
 
-**Versión:** 4.0.0  
+**Versión:** 5.0.0  
 **Generado por:** AI Agent Wizard

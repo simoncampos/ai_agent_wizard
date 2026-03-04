@@ -20,7 +20,7 @@ files:
     lines: ~150
   README.md:
     type: md
-    lines: ~346
+    lines: ~363
   RELEASE_NOTES_4.0.0.md:
     type: md
     lines: ~236
