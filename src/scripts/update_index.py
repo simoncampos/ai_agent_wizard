@@ -32,13 +32,20 @@ sys.path.insert(0, str(engine_dir))
 
 from core.scanner import scan_files, iter_source_files
 from core.detectors import detect_languages, detect_frameworks
-from core.extractors import extract_functions, extract_endpoints, extract_vue_components, extract_dependencies
+from core.extractors import (
+    extract_functions, extract_endpoints, extract_vue_components, extract_dependencies,
+    extract_call_graph, extract_types_and_models, extract_docstrings,
+    extract_config_map, extract_patterns
+)
 from generators.all_generators import (
     generate_project_index, generate_all_yamls,
     generate_architecture_yaml, generate_flow_yaml, generate_graph_yaml,
     generate_changes_yaml, generate_summaries_yaml,
     generate_context_budget_yaml, generate_protocol_yaml,
-    generate_ai_instructions, merge_ai_instructions
+    generate_ai_instructions, merge_ai_instructions,
+    generate_context_anchor_yaml, generate_call_graph_yaml,
+    generate_types_yaml, generate_docstrings_yaml, generate_config_map_yaml,
+    generate_entry_points_yaml, generate_patterns_yaml, generate_quick_context_yaml
 )
 
 
@@ -69,6 +76,11 @@ def update_all(quiet=False, verbose=False):
     endpoints = extract_endpoints(files_map)
     components = extract_vue_components(files_map)
     dependencies = extract_dependencies(files_map)
+    call_graph = extract_call_graph(files_map, functions)
+    types = extract_types_and_models(files_map)
+    docstrings = extract_docstrings(files_map, functions)
+    config_map = extract_config_map(files_map, str(project_dir))
+    patterns = extract_patterns(files_map, functions, frameworks)
 
     # Liberar contenido
     for fpath in files_map:
@@ -140,11 +152,59 @@ def update_all(quiet=False, verbose=False):
     _write(ai_dir / 'AI_INSTRUCTIONS.yaml', ai_instr_merged)
     generated.append('AI_INSTRUCTIONS.yaml')
 
+    # CONTEXT_ANCHOR.yaml
+    content = generate_context_anchor_yaml(
+        project_name, languages, frameworks, functions, endpoints, components, files_map
+    )
+    _write(ai_dir / 'CONTEXT_ANCHOR.yaml', content)
+    generated.append('CONTEXT_ANCHOR.yaml')
+
+    # CALL_GRAPH.yaml
+    content = generate_call_graph_yaml(call_graph)
+    _write(ai_dir / 'CALL_GRAPH.yaml', content)
+    generated.append('CALL_GRAPH.yaml')
+
+    # TYPES.yaml (solo si hay tipos)
+    if types:
+        content = generate_types_yaml(types)
+        _write(ai_dir / 'TYPES.yaml', content)
+        generated.append('TYPES.yaml')
+
+    # DOCSTRINGS.yaml (solo si hay docstrings)
+    if docstrings:
+        content = generate_docstrings_yaml(docstrings)
+        _write(ai_dir / 'DOCSTRINGS.yaml', content)
+        generated.append('DOCSTRINGS.yaml')
+
+    # CONFIG_MAP.yaml
+    content = generate_config_map_yaml(config_map)
+    _write(ai_dir / 'CONFIG_MAP.yaml', content)
+    generated.append('CONFIG_MAP.yaml')
+
+    # ENTRY_POINTS.yaml
+    content = generate_entry_points_yaml(
+        files_map, functions, endpoints, components, dependencies, call_graph
+    )
+    _write(ai_dir / 'ENTRY_POINTS.yaml', content)
+    generated.append('ENTRY_POINTS.yaml')
+
+    # PATTERNS.yaml
+    content = generate_patterns_yaml(patterns)
+    _write(ai_dir / 'PATTERNS.yaml', content)
+    generated.append('PATTERNS.yaml')
+
+    # QUICK_CONTEXT.yaml
+    content = generate_quick_context_yaml(
+        project_name, languages, frameworks, functions, endpoints, components, files_map, config_map
+    )
+    _write(ai_dir / 'QUICK_CONTEXT.yaml', content)
+    generated.append('QUICK_CONTEXT.yaml')
+
     # Resumen
     total_funcs = sum(len(v) for v in functions.values())
 
     if not quiet:
-        print(f"\n  ✓ {len(generated)} archivos regenerados")
+        print(f"\n  ok {len(generated)} archivos regenerados")
         print(f"    {len(files_map)} archivos | {total_funcs} funciones | {len(endpoints)} endpoints")
         if verbose:
             for f in generated:

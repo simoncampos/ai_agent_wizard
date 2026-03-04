@@ -21,14 +21,14 @@ def warn(message, context=""):
         warning += f" ({context})"
     WARNINGS.append(warning)
     if VERBOSE:
-        print(f"  ⚠️  {warning}")
+        print(f"  [!] {warning}")
 
 
 def vprint(message, level=1):
     """Print condicional segun verbosidad"""
     if VERBOSE:
         indent = "  " + "  " * level
-        print(f"{indent}🔍 {message}")
+        print(f"{indent}> {message}")
 
 
 def show_warnings_summary():

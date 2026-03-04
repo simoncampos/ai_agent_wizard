@@ -427,7 +427,18 @@ def generate_flow_yaml():
     return """# AI AGENT EXECUTION FLOW
 # How to use the .ai/ index system for efficient code comprehension
 
-## STEP 1: UNDERSTAND PROJECT CONTEXT (READ FIRST)
+## ⛔ STEP 0: CONTEXT ANCHOR (ALWAYS READ FIRST — EVERY SESSION)
+context_anchor:
+  file: ".ai/CONTEXT_ANCHOR.yaml"
+  why: "Ultra-compact project summary (<25 lines). Read this EVERY time you start or resume work."
+  when_to_reread:
+    - "At the start of every conversation"
+    - "Every 5 messages during a long conversation"
+    - "When you feel unsure about the project's purpose or structure"
+    - "After any context window compression or summarization"
+  rule: "If you can only read ONE file, read CONTEXT_ANCHOR.yaml"
+
+## STEP 1: UNDERSTAND PROJECT CONTEXT (READ ON FIRST SESSION)
 read_order:
   1. this_file: "FLOW.yaml"
     why: Understand how to use the index system efficiently
@@ -519,13 +530,35 @@ update_indexes: |
     
 ## UNDERSTANDING .ai/ FILES
 file_guide:
+  CONTEXT_ANCHOR.yaml: "Ultra-compact summary — read every session and every 5 messages"
   PROJECT_INDEX.yaml: "Master index - functions, files, endpoints, components, dependencies"
   ARCHITECTURE.yaml: "Project structure - modules, flow, purpose, how everything connects"
+  CALL_GRAPH.yaml: "Function call relationships - who calls whom"
+  TYPES.yaml: "Data models, interfaces, structs with their fields"
+  DOCSTRINGS.yaml: "Function documentation - params, returns, descriptions"
+  CONFIG_MAP.yaml: "Environment variables and configuration files"
+  ENTRY_POINTS.yaml: "Boot sequence, request lifecycle, read order"
+  PATTERNS.yaml: "Design patterns, middleware, auth, naming conventions"
+  QUICK_CONTEXT.yaml: "Pre-computed answers for common tasks (add endpoint, add test, etc.)"
   CONVENTIONS.yaml: "Code style - naming, indentation, patterns"
   TESTING.yaml: "How to test - test commands, validation"
   ERRORS.yaml: "Common problems - known issues and fixes"
   GIT_WORKFLOW.yaml: "Git rules - branches, commits, versioning"
   
+## CONTEXT PERSISTENCE RULES
+context_persistence: |
+  ⛔ CRITICAL: These rules prevent context loss during long conversations.
+  
+  1. ALWAYS read CONTEXT_ANCHOR.yaml at conversation start
+  2. RE-READ CONTEXT_ANCHOR.yaml every ~5 messages
+  3. If conversation was summarized/compressed, IMMEDIATELY re-read:
+     - CONTEXT_ANCHOR.yaml (20 lines, <500 tokens)
+     - AGENT_GUIDE.md (if you lost project rules)
+  4. When including this conversation in a summary, ALWAYS include:
+     "REMEMBER: Re-read .ai/CONTEXT_ANCHOR.yaml before continuing"
+  5. Before every action, verify: Do I know what project this is?
+     If not → read CONTEXT_ANCHOR.yaml
+
 ## EFFICIENCY EXAMPLE
 example: |
   WRONG WAY (High Token Usage):
@@ -928,6 +961,7 @@ def generate_protocol_yaml():
     """
     Genera PROTOCOL.yaml — reglas de comportamiento para agentes IA.
     Define orden de lectura, reglas de modificación, y coordinación multi-agente.
+    Incluye protocolo de persistencia de contexto.
     """
     return """# PROTOCOL - AI Agent Behavior Rules
 # Rules for efficient and safe interaction with this codebase
@@ -938,14 +972,58 @@ identity: |
   This system was installed to help you work efficiently.
   Follow these rules to minimize token usage and avoid errors.
 
+## ⛔ CONTEXT PERSISTENCE (NON-NEGOTIABLE)
+context_persistence:
+  on_conversation_start: |
+    1. Read AGENT_GUIDE.md (full — project rules and context)
+    2. Read .ai/CONTEXT_ANCHOR.yaml (ultra-compact project summary)
+    3. Read .ai/AI_INSTRUCTIONS.yaml (flow, stack, considerations)
+    4. Then proceed to FLOW.yaml → PROJECT_INDEX.yaml
+  
+  every_5_messages: |
+    Re-read .ai/CONTEXT_ANCHOR.yaml (~20 lines, <500 tokens).
+    This prevents context drift during long conversations.
+    Cost: negligible. Benefit: maintains accuracy.
+  
+  on_new_task: |
+    Before starting ANY new task:
+    1. Re-read .ai/CONTEXT_ANCHOR.yaml
+    2. Consult .ai/CONTEXT_BUDGET.yaml for file priorities
+    3. Check .ai/QUICK_CONTEXT.yaml for pre-computed guidance
+  
+  on_context_doubt: |
+    If you are unsure about ANY rule or project detail:
+    → Re-read AGENT_GUIDE.md (full rules)
+    → Re-read .ai/AI_INSTRUCTIONS.yaml (project-specific notes)
+    NEVER guess. NEVER assume. Look it up.
+  
+  on_file_modification: |
+    After editing code:
+    → Consult .ai/PROJECT_INDEX.yaml to verify impact on other files
+    → Check .ai/CALL_GRAPH.yaml to see what functions depend on what you changed
+    → Suggest user runs: python .ai/update_index.py
+  
+  on_summary_or_compression: |
+    If the conversation is summarized or compressed:
+    → Your FIRST action must be: read .ai/CONTEXT_ANCHOR.yaml
+    → Include in any summary: "REMEMBER: Re-read .ai/CONTEXT_ANCHOR.yaml"
+  
+  never_assume: |
+    If you cannot find a function in your memory:
+    → Search PROJECT_INDEX.yaml
+    → If not there, search the file directly
+    → NEVER invent function names, parameters, or line numbers
+
 ## READ ORDER (MANDATORY)
 read_order:
+  0_anchor: ".ai/CONTEXT_ANCHOR.yaml → Ultra-compact summary (EVERY session, every 5 msgs)"
   1_flow: ".ai/FLOW.yaml → Understand how to use the index system"
   2_index: ".ai/PROJECT_INDEX.yaml → Get the complete code map"
   3_arch: ".ai/ARCHITECTURE.yaml → Understand project structure"
   4_budget: ".ai/CONTEXT_BUDGET.yaml → Know which files matter most"
   5_changes: ".ai/CHANGES.yaml → See what changed recently"
   6_graph: ".ai/GRAPH.yaml → Understand module dependencies"
+  7_quick: ".ai/QUICK_CONTEXT.yaml → Pre-computed guidance for common tasks"
 
 ## MODIFICATION RULES
 modification_rules:
@@ -959,6 +1037,7 @@ modification_rules:
     - "Run: python .ai/update_index.py"
     - "Or suggest the user run it"
     - "Check CHANGES.yaml for affected files"
+    - "Check CALL_GRAPH.yaml for functions that depend on changed code"
 
 ## TOKEN OPTIMIZATION
 token_rules:
@@ -967,6 +1046,9 @@ token_rules:
   - "Read CONTEXT_BUDGET.yaml to prioritize which files to read"
   - "Check SUMMARIES.yaml for a quick overview of any file"
   - "For dependencies, read GRAPH.yaml instead of scanning imports"
+  - "For function docs, read DOCSTRINGS.yaml instead of reading the function"
+  - "For data shapes, read TYPES.yaml instead of searching for model definitions"
+  - "For common tasks, read QUICK_CONTEXT.yaml before exploring code"
 
 ## MULTI-AGENT COORDINATION
 multi_agent:
@@ -983,11 +1065,58 @@ error_handling:
   - "If a function isn't in the index, it may be new — search the file directly"
   - "Check ERRORS.yaml for known project-specific errors"
 
+## ⛔ WORKFLOW RULES — WHEN TO UPDATE INDEXES AND COMMIT
+workflow:
+  during_fixes: |
+    When fixing bugs or making code corrections:
+    - Do NOT run update_index.py after each change
+    - Do NOT commit to git after each change  
+    - Do NOT update AGENT_GUIDE.md business section for minor fixes
+    - Focus ONLY on fixing the code
+  
+  when_to_update: |
+    Update indexes and commit ONLY when:
+    - The USER confirms the implementation works ("it works", "looks good", "approved")
+    - The USER explicitly asks you to update indexes or commit
+    - The USER asks you to review and test yourself, AND you confirm it works
+    
+  correct_sequence: |
+    After user approves:
+    1. Update AGENT_GUIDE.md business section if there were significant project changes
+    2. Suggest: python .ai/update_index.py
+    3. Suggest commit with descriptive message per GIT_WORKFLOW.yaml
+    
+  summary: "Implement → User tests → User approves → THEN update and commit"
+
 ## COMMIT GUIDELINES
 commit_rules:
   - "Read GIT_WORKFLOW.yaml for project commit conventions"
   - "Include .ai/*.yaml in commits (they should be version-controlled)"
   - "The pre-commit hook auto-updates indexes before each commit"
+  - "Do NOT commit during active fix/debug cycles — wait for user approval"
+
+## FIRST RESPONSE OBLIGATION
+first_response: |
+  Before giving your FIRST response in a new conversation:
+  1. Read AGENT_GUIDE.md
+  2. Check if the "QUÉ ES ESTE PROYECTO" section says "PENDIENTE"
+  3. If PENDIENTE: Complete it NOW using .ai/ indexes. Do NOT respond to user first.
+  4. If already completed: Verify it's still accurate, update if needed.
+  This ensures every agent understands the project before acting.
+
+## CONTEXT CHECK (Quick Self-Test)
+context_check: |
+  Before every response, ask yourself:
+  ✓ Did I complete the project description in AGENT_GUIDE.md?
+    → If it says PENDIENTE: complete it NOW before anything else
+  ✓ Do I know what this project is and what it does?
+    → If not: read .ai/CONTEXT_ANCHOR.yaml
+  ✓ Do I know where the code I need is located?
+    → If not: read .ai/PROJECT_INDEX.yaml
+  ✓ Do I know the project's rules and conventions?
+    → If not: read .ai/PROTOCOL.yaml + AGENT_GUIDE.md
+  ✓ Am I in fix/debug mode?
+    → If yes: do NOT update indexes or commit
 """
 
 
@@ -1317,11 +1446,16 @@ def generate_ai_instructions(project_path, languages, frameworks, files_map, fun
     lines.append("ai_behavior:")
     lines.append("")
     lines.append("  first_steps: |")
+    lines.append("    0. Lee .ai/CONTEXT_ANCHOR.yaml (micro-resumen del proyecto, <500 tokens)")
     lines.append("    1. Lee .ai/FLOW.yaml (cómo usar el sistema)")
     lines.append("    2. Lee .ai/PROJECT_INDEX.yaml (mapa completo)")
     lines.append("    3. Consulta .ai/CONTEXT_BUDGET.yaml (prioridad de lectura)")
     lines.append("    4. Lee esta sección de AI_INSTRUCTIONS.yaml (este archivo)")
-    lines.append("    5. LUEGO comienza a leer código específico")
+    lines.append("    5. Consulta .ai/QUICK_CONTEXT.yaml para tareas comunes")
+    lines.append("    6. LUEGO comienza a leer código específico")
+    lines.append("    ")
+    lines.append("    ⛔ PERSISTENCIA: Relee CONTEXT_ANCHOR.yaml cada ~5 mensajes.")
+    lines.append("    Si la conversación se resumió, tu PRIMERA acción es releer CONTEXT_ANCHOR.yaml.")
     lines.append("")
     lines.append("  finding_code: |")
     lines.append("    Cuando buscas una función:")
@@ -1349,8 +1483,13 @@ def generate_ai_instructions(project_path, languages, frameworks, files_map, fun
     lines.append("    4. Consulta .ai/GIT_WORKFLOW.yaml antes de hacer commits")
     lines.append("")
     lines.append("  token_optimization: |")
+    lines.append("    • Lee CONTEXT_ANCHOR.yaml CADA vez que inicies o dudes (<500 tokens)")
     lines.append("    • Lee CONTEXT_BUDGET.yaml NIVEL 1 (CRITICAL) en CADA conversación")
     lines.append("    • Lee SUMMARIES.yaml para overview de archivos grandes")
+    lines.append("    • Lee DOCSTRINGS.yaml para entender funciones sin leer su código")
+    lines.append("    • Lee TYPES.yaml para conocer estructuras de datos sin buscarlas")
+    lines.append("    • Lee QUICK_CONTEXT.yaml para tareas comunes sin explorar")
+    lines.append("    • Lee CALL_GRAPH.yaml para trazar flujos sin leer archivos completos")
     lines.append("    • Nunca envíes archivos completos en contexto si solo necesitas una función")
     lines.append("    • Usa números de línea del índice para leer secciones específicas")
     lines.append("    • Esto reduce tokens en 90-95% comparado a lectura full-file")
@@ -1669,3 +1808,547 @@ custom_considerations:
     
     result = '\n\n'.join(merged_parts) + '\n' + '\n'.join(footer) + '\n'
     return result
+
+
+# ============================================================================
+# NEW v5.0 GENERATORS
+# ============================================================================
+
+def generate_context_anchor_yaml(project_name, languages, frameworks, functions, 
+                                  endpoints, components, files_map):
+    """
+    Genera CONTEXT_ANCHOR.yaml — micro-resumen ultra-compacto (~20 líneas).
+    Diseñado para que un agente IA lo relea rápidamente (<500 tokens)
+    y recupere contexto sin releer archivos grandes.
+    """
+    today = datetime.date.today().isoformat()
+    
+    total_funcs = sum(len(v) for v in functions.values()) if functions else 0
+    total_files = len(files_map) if files_map else 0
+    
+    # Determinar stack resumido
+    backend = ', '.join(frameworks.get('backend', [])) or 'none'
+    frontend = ', '.join(frameworks.get('frontend', [])) or 'none'
+    
+    # Top 5 archivos más importantes (por cantidad de funciones)
+    critical_files = []
+    if functions:
+        sorted_files = sorted(functions.items(), key=lambda x: len(x[1]), reverse=True)
+        for fpath, funcs in sorted_files[:5]:
+            role = "entry" if any(n in os.path.basename(fpath).lower() for n in ('main', 'app', 'index', 'server')) else "core"
+            critical_files.append(f"  - {fpath} ({role}, {len(funcs)} funcs)")
+    
+    lines = []
+    lines.append(f"# CONTEXT ANCHOR — {project_name}")
+    lines.append(f"# Re-read this file every ~5 messages to maintain context")
+    lines.append(f"# Updated: {today}")
+    lines.append(f"project: {project_name}")
+    lines.append(f"languages: [{', '.join(languages)}]")
+    lines.append(f"stack: {{backend: {backend}, frontend: {frontend}}}")
+    lines.append(f"size: {{files: {total_files}, functions: {total_funcs}, endpoints: {len(endpoints)}, components: {len(components)}}}")
+    lines.append("")
+    lines.append("critical_files:")
+    for cf in critical_files:
+        lines.append(cf)
+    lines.append("")
+    lines.append("rules:")
+    lines.append("  - Use PROJECT_INDEX.yaml line numbers — never read full files")
+    lines.append("  - Never modify .ai/ — it is auto-generated")
+    lines.append("  - After code changes suggest: python .ai/update_index.py")
+    lines.append("")
+    lines.append("if_lost:")
+    lines.append("  1: Read this file (CONTEXT_ANCHOR.yaml)")
+    lines.append("  2: Read AGENT_GUIDE.md")
+    lines.append("  3: Read AI_INSTRUCTIONS.yaml")
+    lines.append("")
+    
+    return '\n'.join(lines)
+
+
+def generate_call_graph_yaml(call_graph):
+    """
+    Genera CALL_GRAPH.yaml — grafo de llamadas entre funciones.
+    Muestra qué funciones llaman a qué otras y quién las llama.
+    """
+    today = datetime.date.today().isoformat()
+    
+    calls = call_graph.get('calls', {})
+    called_by = call_graph.get('called_by', {})
+    
+    lines = []
+    lines.append("# CALL GRAPH - Function call relationships")
+    lines.append(f"# Generated: {today}")
+    lines.append("# Shows who calls whom across the codebase")
+    lines.append("")
+    lines.append(f"statistics:")
+    lines.append(f"  functions_making_calls: {len(calls)}")
+    lines.append(f"  functions_being_called: {len(called_by)}")
+    lines.append("")
+    
+    if calls:
+        lines.append("# CALLS: function → [functions it calls]")
+        lines.append("calls:")
+        for caller in sorted(calls.keys()):
+            callees = calls[caller]
+            if len(callees) <= 3:
+                lines.append(f"  \"{caller}\": [{', '.join(callees)}]")
+            else:
+                lines.append(f"  \"{caller}\":")
+                for callee in callees:
+                    lines.append(f"    - {callee}")
+        lines.append("")
+    
+    if called_by:
+        lines.append("# CALLED_BY: function → [functions that call it]")
+        lines.append("# Use this to find impact of changing a function")
+        lines.append("called_by:")
+        # Mostrar solo las más referenciadas (top 50)
+        sorted_by_refs = sorted(called_by.items(), key=lambda x: len(x[1]), reverse=True)
+        for callee, callers in sorted_by_refs[:50]:
+            if len(callers) <= 3:
+                lines.append(f"  \"{callee}\": [{', '.join(callers)}]")
+            else:
+                lines.append(f"  \"{callee}\": # {len(callers)} callers")
+                for caller in callers[:10]:
+                    lines.append(f"    - {caller}")
+                if len(callers) > 10:
+                    lines.append(f"    # ... +{len(callers) - 10} more")
+        lines.append("")
+    
+    lines.append("# USAGE:")
+    lines.append("# - Before modifying a function, check called_by to see impact")
+    lines.append("# - To trace execution flow, follow calls chain")
+    lines.append("# - Format: \"filepath::function_name\"")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_types_yaml(types):
+    """
+    Genera TYPES.yaml — índice de tipos, interfaces, modelos y sus campos.
+    """
+    today = datetime.date.today().isoformat()
+    
+    lines = []
+    lines.append("# TYPES - Data Models, Interfaces, and Structs")
+    lines.append(f"# Generated: {today}")
+    lines.append("# All type definitions with their fields for quick reference")
+    lines.append("")
+    lines.append(f"total_types: {len(types)}")
+    lines.append("")
+    
+    if types:
+        # Agrupar por kind
+        by_kind = {}
+        for name, info in types.items():
+            kind = info.get('kind', 'other')
+            if kind not in by_kind:
+                by_kind[kind] = {}
+            by_kind[kind][name] = info
+        
+        for kind in sorted(by_kind.keys()):
+            lines.append(f"# --- {kind.upper()} ---")
+            lines.append(f"{kind}:")
+            for name in sorted(by_kind[kind].keys()):
+                info = by_kind[kind][name]
+                lines.append(f"  {name}:")
+                lines.append(f"    file: {info['file']}")
+                lines.append(f"    line: {info['line']}")
+                if info.get('extends'):
+                    lines.append(f"    extends: [{', '.join(info['extends'])}]")
+                if info.get('fields'):
+                    lines.append(f"    fields:")
+                    for field in info['fields'][:20]:  # Max 20 fields
+                        lines.append(f"      - {{name: {field['name']}, type: \"{field['type']}\"}}")
+                    if len(info['fields']) > 20:
+                        lines.append(f"      # ... +{len(info['fields']) - 20} more fields")
+            lines.append("")
+    
+    lines.append("# USAGE: Check field names/types before making API calls or creating instances")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_docstrings_yaml(docstrings):
+    """
+    Genera DOCSTRINGS.yaml — documentación inline enriquecida por función.
+    """
+    today = datetime.date.today().isoformat()
+    
+    lines = []
+    lines.append("# DOCSTRINGS - Function Documentation Index")
+    lines.append(f"# Generated: {today}")
+    lines.append("# Documented functions with params and return types")
+    lines.append("")
+    lines.append(f"documented_functions: {len(docstrings)}")
+    lines.append("")
+    
+    if docstrings:
+        # Agrupar por archivo
+        by_file = {}
+        for func_key, info in docstrings.items():
+            fpath = info['file']
+            if fpath not in by_file:
+                by_file[fpath] = {}
+            by_file[fpath][func_key] = info
+        
+        lines.append("functions:")
+        for fpath in sorted(by_file.keys()):
+            lines.append(f"  # --- {fpath} ---")
+            for func_key in sorted(by_file[fpath].keys()):
+                info = by_file[fpath][func_key]
+                fname = func_key.split('::')[1] if '::' in func_key else func_key
+                lines.append(f"  \"{fname}\":")
+                lines.append(f"    file: {info['file']}")
+                lines.append(f"    line: {info['line']}")
+                lines.append(f"    desc: \"{info['description']}\"")
+                if info.get('params'):
+                    lines.append(f"    params:")
+                    for p in info['params']:
+                        lines.append(f"      - {{name: {p['name']}, type: \"{p.get('type', '')}\", desc: \"{p.get('desc', '')}\"}}")
+                if info.get('returns'):
+                    ret = info['returns']
+                    lines.append(f"    returns: {{type: \"{ret.get('type', '')}\", desc: \"{ret.get('desc', '')}\"}}")
+            lines.append("")
+    
+    lines.append("# USAGE: Check function signatures before calling them")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_config_map_yaml(config_map):
+    """
+    Genera CONFIG_MAP.yaml — mapa de variables de entorno y configuración.
+    """
+    today = datetime.date.today().isoformat()
+    
+    env_vars = config_map.get('env_vars', [])
+    config_files = config_map.get('config_files', [])
+    
+    lines = []
+    lines.append("# CONFIG MAP - Environment Variables and Configuration")
+    lines.append(f"# Generated: {today}")
+    lines.append("# All configuration points in the project")
+    lines.append("")
+    
+    if env_vars:
+        lines.append(f"# {len(env_vars)} environment variables found")
+        lines.append("env_vars:")
+        for var in sorted(env_vars, key=lambda x: x['name']):
+            default_str = f", default: \"{var['default']}\"" if var.get('default') else ""
+            lines.append(f"  - {{name: {var['name']}, file: {var['file']}, line: {var['line']}{default_str}}}")
+        lines.append("")
+    
+    if config_files:
+        lines.append(f"# {len(config_files)} configuration files found")
+        lines.append("config_files:")
+        for cf in config_files:
+            lines.append(f"  - {{path: \"{cf['path']}\", type: {cf['type']}}}")
+        lines.append("")
+    
+    if not env_vars and not config_files:
+        lines.append("# No configuration points detected")
+        lines.append("")
+    
+    lines.append("# USAGE: Check required env vars before deployment or setup")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_entry_points_yaml(files_map, functions, endpoints, components, dependencies, call_graph):
+    """
+    Genera ENTRY_POINTS.yaml — tour del proyecto con boot sequence, 
+    request lifecycle y orden de lectura óptimo.
+    """
+    today = datetime.date.today().isoformat()
+    
+    lines = []
+    lines.append("# ENTRY POINTS - Project Navigation Guide")
+    lines.append(f"# Generated: {today}")
+    lines.append("# Optimal reading order and key abstractions")
+    lines.append("")
+    
+    # Boot sequence
+    lines.append("boot_sequence:")
+    entry_files = []
+    for fpath in files_map:
+        basename = os.path.basename(fpath).lower()
+        if basename in ('main.py', 'app.py', 'index.js', 'index.ts', 'server.js',
+                       'server.ts', 'manage.py', 'wsgi.py', 'asgi.py', 'main.go',
+                       'main.rs', 'program.cs', 'main.java'):
+            entry_files.append(fpath)
+    for i, ef in enumerate(sorted(entry_files), 1):
+        lines.append(f"  {i}: {ef}")
+    if not entry_files:
+        lines.append("  1: # No standard entry points detected — check ARCHITECTURE.yaml")
+    lines.append("")
+    
+    # Request lifecycle (for web apps)
+    if endpoints:
+        lines.append("request_lifecycle:")
+        lines.append("  1_receive: \"HTTP request arrives at server\"")
+        lines.append("  2_route: \"Router matches URL pattern (see endpoints in PROJECT_INDEX.yaml)\"")
+        lines.append("  3_handler: \"Handler function processes request\"")
+        lines.append("  4_response: \"Response returned to client\"")
+        lines.append("")
+    
+    # Key abstractions — functions with most callers
+    called_by = call_graph.get('called_by', {}) if call_graph else {}
+    if called_by:
+        lines.append("key_abstractions:")
+        lines.append("  # Functions referenced most by other functions")
+        sorted_by_refs = sorted(called_by.items(), key=lambda x: len(x[1]), reverse=True)
+        for func_key, callers in sorted_by_refs[:10]:
+            lines.append(f"  - \"{func_key}\": {len(callers)} references")
+        lines.append("")
+    
+    # Optimal read order
+    lines.append("read_order:")
+    lines.append("  # Recommended sequence for a new agent to understand the project")
+    
+    # 1. Entry points
+    read_order = []
+    for ef in sorted(entry_files):
+        read_order.append(ef)
+    
+    # 2. Files with most functions
+    if functions:
+        sorted_by_funcs = sorted(functions.items(), key=lambda x: len(x[1]), reverse=True)
+        for fpath, funcs in sorted_by_funcs[:5]:
+            if fpath not in read_order:
+                read_order.append(fpath)
+    
+    # 3. Files with endpoints
+    if endpoints:
+        for ep in endpoints.values():
+            if ep['file'] not in read_order:
+                read_order.append(ep['file'])
+    
+    for i, fpath in enumerate(read_order[:10], 1):
+        lines.append(f"  {i}: {fpath}")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_patterns_yaml(patterns):
+    """
+    Genera PATTERNS.yaml — patrones de diseño y convenciones detectadas.
+    """
+    today = datetime.date.today().isoformat()
+    
+    lines = []
+    lines.append("# PATTERNS - Design Patterns and Conventions Detected")
+    lines.append(f"# Generated: {today}")
+    lines.append("# Follow these patterns when modifying or extending the codebase")
+    lines.append("")
+    
+    # Naming conventions
+    naming = patterns.get('naming', {})
+    lines.append("naming_convention:")
+    lines.append(f"  dominant_style: {naming.get('style', 'unknown')}")
+    samples = naming.get('samples', {})
+    if samples:
+        for style, count in samples.items():
+            lines.append(f"  {style}: {count} occurrences")
+    lines.append("")
+    
+    # Design patterns
+    dp = patterns.get('design_patterns', [])
+    if dp:
+        lines.append("design_patterns:")
+        for p in dp:
+            lines.append(f"  - {p}")
+        lines.append("")
+    
+    # Middleware
+    mw = patterns.get('middleware', [])
+    if mw:
+        lines.append("middleware:")
+        for m in mw[:20]:
+            name = m.get('name', m.get('type', 'unknown'))
+            lines.append(f"  - {{type: {m['type']}, name: \"{name}\", file: {m['file']}, line: {m['line']}}}")
+        lines.append("")
+    
+    # Decorators
+    decorators = patterns.get('decorators', {})
+    if decorators:
+        lines.append("decorators_used:")
+        for dec, count in decorators.items():
+            lines.append(f"  {dec}: {count}")
+        lines.append("")
+    
+    # Auth
+    auth = patterns.get('auth', [])
+    if auth:
+        lines.append("auth_patterns:")
+        for a in auth:
+            lines.append(f"  - {a}")
+        lines.append("")
+    
+    # Error handling
+    eh = patterns.get('error_handling', {})
+    lines.append("error_handling:")
+    lines.append(f"  strategy: {eh.get('strategy', 'unknown')}")
+    custom_exc = eh.get('custom_exceptions', [])
+    if custom_exc:
+        lines.append("  custom_exceptions:")
+        for exc in custom_exc:
+            lines.append(f"    - {exc}")
+    lines.append("")
+    
+    lines.append("# USAGE: Follow these patterns when writing new code to maintain consistency")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'
+
+
+def generate_quick_context_yaml(project_name, languages, frameworks, functions, 
+                                 endpoints, components, files_map, config_map=None):
+    """
+    Genera QUICK_CONTEXT.yaml — respuestas pre-calculadas para tareas comunes.
+    Permite que un agente sepa inmediatamente cómo agregar un endpoint,
+    crear un test, etc., sin explorar el código.
+    """
+    today = datetime.date.today().isoformat()
+    
+    backend_fw = frameworks.get('backend', [])
+    frontend_fw = frameworks.get('frontend', [])
+    has_python = 'Python' in languages
+    has_js = any(l in languages for l in ['JavaScript', 'TypeScript'])
+    has_php = 'PHP' in languages
+    
+    lines = []
+    lines.append(f"# QUICK CONTEXT - Pre-computed Guidance for {project_name}")
+    lines.append(f"# Generated: {today}")
+    lines.append("# Check here FIRST before exploring code for common tasks")
+    lines.append("")
+    
+    # --- Add endpoint ---
+    lines.append("add_endpoint:")
+    if endpoints:
+        # Find example endpoint
+        first_ep = next(iter(endpoints.values()))
+        lines.append(f"  example_file: \"{first_ep['file']}\"")
+        lines.append(f"  example_line: {first_ep['line']}")
+        lines.append(f"  example_handler: \"{first_ep['handler']}\"")
+    
+    if any('flask' in f.lower() for f in backend_fw):
+        lines.append("  pattern: |")
+        lines.append("    @app.route('/your-route', methods=['GET'])")
+        lines.append("    def your_handler():")
+        lines.append("        return jsonify(result)")
+    elif any('fastapi' in f.lower() for f in backend_fw):
+        lines.append("  pattern: |")
+        lines.append("    @app.get('/your-route')")
+        lines.append("    async def your_handler():")
+        lines.append("        return {\"result\": data}")
+    elif any('express' in f.lower() for f in backend_fw):
+        lines.append("  pattern: |")
+        lines.append("    router.get('/your-route', async (req, res) => {")
+        lines.append("      res.json(result);")
+        lines.append("    });")
+    elif any('django' in f.lower() for f in backend_fw):
+        lines.append("  pattern: |")
+        lines.append("    # In urls.py: path('your-route/', views.your_view)")
+        lines.append("    # In views.py:")
+        lines.append("    def your_view(request):")
+        lines.append("        return JsonResponse(result)")
+    elif any('laravel' in f.lower() for f in backend_fw):
+        lines.append("  pattern: |")
+        lines.append("    Route::get('/your-route', [YourController::class, 'method']);")
+    else:
+        lines.append("  pattern: \"See existing endpoints in PROJECT_INDEX.yaml\"")
+    lines.append("")
+    
+    # --- Add test ---
+    lines.append("add_test:")
+    test_dirs = []
+    for fpath in files_map:
+        if 'test' in fpath.lower():
+            dir_name = os.path.dirname(fpath)
+            if dir_name and dir_name not in test_dirs:
+                test_dirs.append(dir_name)
+    if test_dirs:
+        lines.append(f"  directory: \"{test_dirs[0]}\"")
+    
+    if has_python:
+        lines.append("  command: \"pytest tests/ -v\"")
+        lines.append("  pattern: |")
+        lines.append("    def test_your_feature():")
+        lines.append("        result = your_function()")
+        lines.append("        assert result == expected")
+    elif has_js:
+        lines.append("  command: \"npm test\"")
+        lines.append("  pattern: |")
+        lines.append("    describe('Feature', () => {")
+        lines.append("      test('should work', () => {")
+        lines.append("        expect(result).toBe(expected);")
+        lines.append("      });")
+        lines.append("    });")
+    elif has_php:
+        lines.append("  command: \"vendor/bin/phpunit\"")
+        lines.append("  pattern: |")
+        lines.append("    public function test_your_feature(): void {")
+        lines.append("        $this->assertEquals($expected, $result);")
+        lines.append("    }")
+    lines.append("")
+    
+    # --- Add dependency ---
+    lines.append("add_dependency:")
+    if has_python:
+        lines.append("  file: \"requirements.txt\"")
+        lines.append("  command: \"pip install <package>\"")
+    elif has_js:
+        lines.append("  file: \"package.json\"")
+        lines.append("  command: \"npm install <package>\"")
+    elif has_php:
+        lines.append("  file: \"composer.json\"")
+        lines.append("  command: \"composer require <package>\"")
+    lines.append("")
+    
+    # --- Add component ---
+    if components or frontend_fw:
+        lines.append("add_component:")
+        comp_dirs = set()
+        for comp in components.values():
+            comp_dir = os.path.dirname(comp['file'])
+            if comp_dir:
+                comp_dirs.add(comp_dir)
+        if comp_dirs:
+            lines.append(f"  directory: \"{sorted(comp_dirs)[0]}\"")
+        
+        if any('react' in f.lower() for f in frontend_fw):
+            lines.append("  pattern: |")
+            lines.append("    export default function YourComponent({ props }) {")
+            lines.append("      return <div>content</div>;")
+            lines.append("    }")
+        elif any('vue' in f.lower() for f in frontend_fw):
+            lines.append("  pattern: |")
+            lines.append("    <template><div>content</div></template>")
+            lines.append("    <script setup>")
+            lines.append("    const props = defineProps(['prop1'])")
+            lines.append("    </script>")
+        lines.append("")
+    
+    # --- Fix bug ---
+    lines.append("fix_bug:")
+    lines.append("  steps:")
+    lines.append("    1: \"Check ERRORS.yaml for known issues\"")
+    lines.append("    2: \"Check CALL_GRAPH.yaml to trace the function\"")
+    lines.append("    3: \"Check CHANGES.yaml for recently modified files\"")
+    lines.append("    4: \"Use PROJECT_INDEX.yaml to find the function by name\"")
+    lines.append("    5: \"Read only the relevant lines, not the full file\"")
+    lines.append("")
+    
+    # --- Update indexes ---
+    lines.append("update_indexes:")
+    lines.append("  command: \"python .ai/update_index.py\"")
+    lines.append("  when: \"After any code modification\"")
+    lines.append("")
+    
+    return '\n'.join(lines) + '\n'

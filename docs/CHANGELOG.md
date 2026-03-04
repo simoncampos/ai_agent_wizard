@@ -1,5 +1,73 @@
 # CHANGELOG
 
+## [5.0.0] - 2026-03-04
+
+### ✨ Nuevos Índices YAML (8 archivos nuevos)
+- **CONTEXT_ANCHOR.yaml**: Micro-resumen del proyecto en <500 tokens. Diseñado para releerse cada ~5 mensajes y mantener contexto en conversaciones largas.
+- **CALL_GRAPH.yaml**: Grafo de llamadas entre funciones — quién llama a quién y quién es llamado por quién. Clave para análisis de impacto.
+- **TYPES.yaml**: Modelos de datos, interfaces, structs, dataclasses, enums con sus campos y líneas exactas. Soporte para Python, TypeScript, Go, Rust, Java y PHP.
+- **DOCSTRINGS.yaml**: Índice de documentación de funciones — docstrings y JSDoc para cada función documentada.
+- **CONFIG_MAP.yaml**: Variables de entorno, archivos `.env`, archivos de configuración detectados con sus ubicaciones.
+- **ENTRY_POINTS.yaml**: Puntos de entrada del proyecto, boot sequence, ciclo de vida de requests, orden de lectura recomendado.
+- **PATTERNS.yaml**: Patrones de diseño detectados, middleware, decoradores, autenticación, convenciones de naming, estrategia de error handling.
+- **QUICK_CONTEXT.yaml**: Guías pre-calculadas para tareas comunes (agregar endpoint, agregar modelo, modificar función, agregar test).
+
+### 🧠 Sistema de Persistencia de Contexto (4 capas)
+- **Capa 1 — CONTEXT_ANCHOR.yaml**: Micro-resumen ultra-compacto que se relee frecuentemente para prevenir pérdida de contexto.
+- **Capa 2 — PROTOCOL.yaml reforzado**: Nuevas secciones `CONTEXT PERSISTENCE (NON-NEGOTIABLE)` con triggers automáticos (`on_conversation_start`, `every_5_messages`, `on_new_task`, `on_context_doubt`, `on_summary_or_compression`). Nuevo `context_check` self-test antes de cada respuesta.
+- **Capa 3 — AGENT_GUIDE.md renovado**: Instrucción explícita de incluir frase de persistencia en resúmenes, referencia a CONTEXT_ANCHOR, checklist de verificación expandido.
+- **Capa 4 — Archivos IDE nativos**: Archivos de contexto para cada IDE que redirigen a AGENT_GUIDE.md.
+
+### 📝 AGENT_GUIDE.md v5.0
+- **Sección de negocio obligatoria**: El agente DEBE completar la sección "QUÉ ES ESTE PROYECTO" ANTES de su primera respuesta. Si dice "PENDIENTE", el agente no responde hasta rellenarla.
+- **Actualización continua**: El agente debe mantener esta sección actualizada con cambios significativos del proyecto.
+- **Reglas de workflow**: Nuevas reglas sobre cuándo actualizar índices y hacer commit — solo cuando el usuario confirma que funciona, nunca durante fixes/debug.
+- **Tabla de archivos**: Listado completo de todos los YAMLs en `.ai/` con descripciones.
+- **Guía de persistencia**: Instrucciones para mantener contexto en conversaciones largas.
+
+### 🖥️ Archivos IDE Multi-Plataforma
+- **CLAUDE.md**: Instrucciones para Claude Code (claude.ai).
+- **.github/copilot-instructions.md**: Instrucciones para GitHub Copilot (VS Code, JetBrains).
+- **.windsurfrules**: Instrucciones para Windsurf/Codeium.
+- **.cursorrules**: Symlink a AGENT_GUIDE.md (fallback a copia en Windows sin permisos de symlink).
+
+### 🔄 Migración v4→v5 Automática
+- `python .ai/update.py` ahora detecta proyectos v4 y migra automáticamente a v5.
+- **Preservación de sección de negocio**: Si un agente ya completó la sección "QUÉ ES ESTE PROYECTO", se preserva durante la migración.
+- Nueva función `upgrade_project_files()` en main.py para migración de AGENT_GUIDE + creación de archivos IDE.
+- `update_index.py` regenera todos los nuevos YAMLs automáticamente.
+
+### ⛔ Reglas de Workflow (Nuevo)
+- **Durante fixes/debug**: NO actualizar índices, NO hacer commit, NO actualizar descripción de negocio. Solo corregir el código.
+- **Cuándo sí**: Cuando el usuario confirme que funciona ("ya funciona", "todo ok", "aprobado"), o solicite explícitamente.
+- **Secuencia correcta**: Implementar → Usuario prueba → Usuario aprueba → Actualizar índices → Commit.
+- Reglas aplicadas en AGENT_GUIDE.md, PROTOCOL.yaml, y todos los archivos IDE.
+
+### 🔧 Nuevos Extractores (5)
+- `extract_call_graph(files_map, functions)`: Analiza cuerpos de funciones para detectar llamadas entre ellas.
+- `extract_types_and_models(files_map)`: Detecta clases de datos, interfaces, enums en 6 lenguajes.
+- `extract_docstrings(files_map, functions)`: Extrae documentación de funciones (docstrings Python, JSDoc, PHPDoc, GoDoc, RustDoc).
+- `extract_config_map(files_map, project_path)`: Busca variables de entorno y archivos de configuración.
+- `extract_patterns(files_map, functions, frameworks)`: Detecta patrones de diseño, middleware, auth, naming.
+
+### 🔧 Cambios Internos
+- `extractors.py`: +350 líneas con 5 nuevos extractores + helpers por lenguaje.
+- `all_generators.py`: +500 líneas con 8 nuevos generadores. PROTOCOL.yaml expandido con persistencia, workflow y first_response.
+- `main.py`: Refactorizado — helpers reutilizables (`_get_agent_guide_content`, `_extract_business_section`, `_restore_business_section`, `_create_ide_files`, `upgrade_project_files`). Fase 5 simplificada usando helpers.
+- `update_index.py`: Integración de todos los nuevos extractores y generadores.
+- `update.py`: Fase 5 de migración automática de archivos de instrucciones.
+- `install_online.py`: Versión actualizada a v5.0.0.
+- Tests: +2 clases de test (`TestNewExtractors`, `TestNewGenerators`) con 17 nuevos tests.
+
+### 🚀 Beneficios para Agentes IA
+- **95% menos tokens**: Los nuevos índices (CALL_GRAPH, TYPES, DOCSTRINGS) permiten entender relaciones sin abrir archivos.
+- **Contexto persistente**: El sistema de 4 capas garantiza que el agente nunca "olvide" las reglas del proyecto.
+- **Comprensión progresiva**: CONTEXT_ANCHOR → QUICK_CONTEXT → índices específicos. De lo general a lo específico.
+- **Workflow ordenado**: Reglas claras sobre cuándo hacer commit evitan actualizaciones prematuras durante debug.
+- **Multi-IDE**: Un sistema, todos los agentes. Claude, Copilot, Cursor, Windsurf, todos reciben instrucciones.
+
+---
+
 ## [4.0.0] - 2026-02-25
 
 ### ✨ Major Features

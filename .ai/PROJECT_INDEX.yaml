@@ -1,7 +1,7 @@
 # ============================================================================
 # AI_AGENT_WIZARD - AI PROJECT INDEX
 # ============================================================================
-# LAST_UPDATED: 2026-02-25
+# LAST_UPDATED: 2026-03-04
 # ============================================================================
 
 meta:
@@ -29,7 +29,7 @@ files:
     lines: ~33
   docs\CHANGELOG.md:
     type: md
-    lines: ~463
+    lines: ~531
   docs\IMPLEMENTATION_SUMMARY.md:
     type: md
     lines: ~261
@@ -86,7 +86,7 @@ files:
     lines: ~322
   src\core\extractors.py:
     type: py
-    lines: ~548
+    lines: ~1333
   src\core\scanner.py:
     type: py
     lines: ~127
@@ -98,16 +98,16 @@ files:
     lines: ~3
   src\generators\all_generators.py:
     type: py
-    lines: ~1671
+    lines: ~2354
   src\main.py:
     type: py
-    lines: ~459
+    lines: ~691
   src\scripts\update.py:
     type: py
-    lines: ~307
+    lines: ~320
   src\scripts\update_index.py:
     type: py
-    lines: ~173
+    lines: ~233
   src\templates\__init__.py:
     type: py
     lines: ~17
@@ -125,7 +125,7 @@ files:
     lines: ~1
   tests\test_all.py:
     type: py
-    lines: ~488
+    lines: ~726
 
 # ============================================================================
 # FUNCTIONS - name: line
@@ -164,7 +164,18 @@ functions:
     extract_endpoints: 176
     extract_ui_components: 303
     extract_vue_components: 442
-    extract_dependencies: 447
+    extract_call_graph: 447
+    extract_types_and_models: 550
+    _extract_python_types: 595
+    _extract_ts_types: 675
+    _extract_go_types: 737
+    _extract_rust_types: 767
+    _extract_java_types: 820
+    _extract_php_types: 854
+    extract_docstrings: 888
+    extract_config_map: 1009
+    extract_patterns: 1091
+    extract_dependencies: 1232
   src\core\scanner.py:
     warn: 16
     vprint: 17
@@ -184,21 +195,35 @@ functions:
     generate_all_yamls: 103
     generate_architecture_yaml: 272
     generate_flow_yaml: 425
-    generate_graph_yaml: 546
-    generate_changes_yaml: 655
-    generate_summaries_yaml: 759
-    _extract_file_summary: 784
-    generate_context_budget_yaml: 856
-    generate_protocol_yaml: 927
-    generate_ai_instructions: 994
-    _parse_yaml_sections: 1405
-    merge_ai_instructions: 1467
+    generate_graph_yaml: 579
+    generate_changes_yaml: 688
+    generate_summaries_yaml: 792
+    _extract_file_summary: 817
+    generate_context_budget_yaml: 889
+    generate_protocol_yaml: 960
+    generate_ai_instructions: 1123
+    _parse_yaml_sections: 1544
+    merge_ai_instructions: 1606
+    generate_context_anchor_yaml: 1817
+    generate_call_graph_yaml: 1868
+    generate_types_yaml: 1927
+    generate_docstrings_yaml: 1974
+    generate_config_map_yaml: 2022
+    generate_entry_points_yaml: 2062
+    generate_patterns_yaml: 2138
+    generate_quick_context_yaml: 2210
   src\main.py:
-    _copy_tree_clean: 37
-    _copy_file_safe: 44
-    _install_git_hook: 52
-    install: 74
-    main: 424
+    _copy_tree_clean: 44
+    _copy_file_safe: 51
+    _install_git_hook: 59
+    _get_agent_guide_content: 84
+    _extract_business_section: 254
+    _restore_business_section: 275
+    _create_ide_files: 293
+    upgrade_project_files: 380
+    install: 421
+    _safe_write: 537
+    main: 656
   src\scripts\update.py:
     print_banner: 42
     download_repository: 50
@@ -209,8 +234,8 @@ functions:
     cleanup: 224
     main: 232
   src\scripts\update_index.py:
-    update_all: 45
-    _write: 154
+    update_all: 52
+    _write: 214
   src\templates\project_templates.py:
     get_template: 59
     list_templates: 64
@@ -224,63 +249,82 @@ functions:
     clear_warnings: 44
     get_warnings: 50
   tests\test_all.py:
-    TestValidators: 27
-    TestValidators.test_python_version: 30
-    TestValidators.test_git_installed: 35
-    TestValidators.test_disk_space: 40
-    TestValidators.test_write_permissions: 46
-    TestScanner: 52
-    TestScanner.setUp: 55
-    TestScanner.tearDown: 59
-    TestScanner.test_is_empty_project: 63
-    TestScanner.test_scan_files: 75
-    TestDetectors: 88
-    TestDetectors.setUp: 91
-    TestDetectors.tearDown: 94
-    TestDetectors.test_detect_languages: 97
-    TestDetectors.test_detect_frameworks_django: 109
-    TestDetectors.test_detect_frameworks_laravel: 118
-    TestDetectors.test_detect_frameworks_react: 125
-    TestExtractors: 136
-    TestExtractors.test_extract_python_functions: 139
-    TestExtractors.test_extract_python_decorators: 163
-    TestExtractors.test_extract_php_functions: 184
-    TestExtractors.test_extract_js_functions: 206
-    TestExtractors.test_extract_flask_endpoints: 226
-    TestExtractors.test_extract_express_endpoints: 245
-    TestExtractors.test_extract_laravel_endpoints: 263
-    TestExtractors.test_extract_django_endpoints: 281
-    TestExtractors.test_extract_dependencies_python: 300
-    TestGenerators: 323
-    TestGenerators.setUp: 326
-    TestGenerators.tearDown: 340
-    TestGenerators.test_generate_project_index: 343
-    TestGenerators.test_generate_architecture_yaml: 358
-    TestGenerators.test_generate_graph_yaml: 369
-    TestGenerators.test_generate_changes_yaml: 378
-    TestGenerators.test_generate_summaries_yaml: 390
-    TestGenerators.test_generate_context_budget_yaml: 402
-    TestGenerators.test_generate_protocol_yaml: 410
-    TestGenerators.test_generate_all_yamls: 417
-    TestTemplates: 429
-    TestTemplates.test_suggest_template: 432
-    TestInstallFlow: 443
-    TestInstallFlow.setUp: 446
-    TestInstallFlow.tearDown: 454
-    TestInstallFlow.test_full_install: 457
+    TestValidators: 34
+    TestValidators.test_python_version: 37
+    TestValidators.test_git_installed: 42
+    TestValidators.test_disk_space: 47
+    TestValidators.test_write_permissions: 53
+    TestScanner: 59
+    TestScanner.setUp: 62
+    TestScanner.tearDown: 66
+    TestScanner.test_is_empty_project: 70
+    TestScanner.test_scan_files: 82
+    TestDetectors: 95
+    TestDetectors.setUp: 98
+    TestDetectors.tearDown: 101
+    TestDetectors.test_detect_languages: 104
+    TestDetectors.test_detect_frameworks_django: 116
+    TestDetectors.test_detect_frameworks_laravel: 125
+    TestDetectors.test_detect_frameworks_react: 132
+    TestExtractors: 143
+    TestExtractors.test_extract_python_functions: 146
+    TestExtractors.test_extract_python_decorators: 170
+    TestExtractors.test_extract_php_functions: 191
+    TestExtractors.test_extract_js_functions: 213
+    TestExtractors.test_extract_flask_endpoints: 233
+    TestExtractors.test_extract_express_endpoints: 252
+    TestExtractors.test_extract_laravel_endpoints: 270
+    TestExtractors.test_extract_django_endpoints: 288
+    TestExtractors.test_extract_dependencies_python: 307
+    TestGenerators: 330
+    TestGenerators.setUp: 333
+    TestGenerators.tearDown: 347
+    TestGenerators.test_generate_project_index: 350
+    TestGenerators.test_generate_architecture_yaml: 365
+    TestGenerators.test_generate_graph_yaml: 376
+    TestGenerators.test_generate_changes_yaml: 385
+    TestGenerators.test_generate_summaries_yaml: 397
+    TestGenerators.test_generate_context_budget_yaml: 409
+    TestGenerators.test_generate_protocol_yaml: 417
+    TestGenerators.test_generate_all_yamls: 424
+    TestNewExtractors: 436
+    TestNewExtractors.test_extract_call_graph: 439
+    TestNewExtractors.test_extract_types_and_models: 462
+    TestNewExtractors.test_extract_docstrings: 479
+    TestNewExtractors.test_extract_config_map: 497
+    TestNewExtractors.test_extract_patterns: 516
+    TestNewGenerators: 534
+    TestNewGenerators.setUp: 537
+    TestNewGenerators.test_generate_context_anchor: 549
+    TestNewGenerators.test_generate_call_graph_yaml: 558
+    TestNewGenerators.test_generate_types_yaml: 568
+    TestNewGenerators.test_generate_docstrings_yaml: 581
+    TestNewGenerators.test_generate_config_map_yaml: 595
+    TestNewGenerators.test_generate_entry_points_yaml: 605
+    TestNewGenerators.test_generate_patterns_yaml: 615
+    TestNewGenerators.test_generate_quick_context_yaml: 626
+    TestNewGenerators.test_protocol_has_workflow_rules: 636
+    TestNewGenerators.test_protocol_has_first_response: 643
+    TestTemplates: 650
+    TestTemplates.test_suggest_template: 653
+    TestInstallFlow: 664
+    TestInstallFlow.setUp: 667
+    TestInstallFlow.tearDown: 675
+    TestInstallFlow.test_full_install: 678
 
 # ============================================================================
 # API ENDPOINTS
 # ============================================================================
 endpoints:
   "ALL /route/": {handler: view, file: src\core\extractors.py, line: 207}
-  "ALL /users/": {handler: views.user_list, file: tests\test_all.py, line: 290}
-  "ALL /users/<int:pk>/": {handler: views.user_detail, file: tests\test_all.py, line: 291}
-  "GET /": {handler: index, file: tests\test_all.py, line: 450}
-  "GET /api/users": {handler: inline, file: tests\test_all.py, line: 252}
-  "GET /users": {handler: get_users, file: tests\test_all.py, line: 233}
-  "POST /api/users": {handler: test_extract_laravel_endpoints, file: tests\test_all.py, line: 254}
-  "POST /users": {handler: get_users, file: tests\test_all.py, line: 233}
+  "ALL /users/": {handler: views.user_list, file: tests\test_all.py, line: 297}
+  "ALL /users/<int:pk>/": {handler: views.user_detail, file: tests\test_all.py, line: 298}
+  "GET /": {handler: index, file: tests\test_all.py, line: 671}
+  "GET /api/users": {handler: inline, file: tests\test_all.py, line: 259}
+  "GET /users": {handler: get_users, file: tests\test_all.py, line: 240}
+  "GET /your-route": {handler: your_handler, file: src\generators\all_generators.py, line: 2247}
+  "POST /api/users": {handler: test_extract_laravel_endpoints, file: tests\test_all.py, line: 261}
+  "POST /users": {handler: get_users, file: tests\test_all.py, line: 240}
 
 # ============================================================================
 # DEPENDENCIES
@@ -293,7 +337,8 @@ dependencies:
   src\core\extractors.py: [docs\requirements.txt, src\utils\warnings.py]
   src\core\scanner.py: [src\utils\warnings.py]
   src\generators\all_generators.py: [docs\requirements.txt]
-  src\main.py: [src\core\detectors.py, src\generators\all_generators.py, src\utils\warnings.py]
+  src\main.py: [docs\requirements.txt, src\core\detectors.py, src\generators\all_generators.py, src\utils\warnings.py]
+  src\scripts\update.py: [src\main.py]
   src\scripts\update_index.py: [src\core\detectors.py, src\generators\all_generators.py]
   src\templates\__init__.py: [AGENT_GUIDE.md]
   src\utils\__init__.py: [AGENT_GUIDE.md]

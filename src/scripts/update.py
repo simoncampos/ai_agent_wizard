@@ -13,11 +13,11 @@ OPCIONES:
     --help, -h      Mostrar esta ayuda
 
 CARACTERÍSTICAS:
-    ✓ Descarga última versión del core desde GitHub
-    ✓ Actualiza .ai/src/ (motor de indexación)
-    ✓ Actualiza scripts (update.py, update_index.py, pre-commit.hook)
-    ✓ Regenera automáticamente todos los índices después de actualizar
-    ✓ Reinstala git hook automáticamente
+    ok Descarga última versión del core desde GitHub
+    ok Actualiza .ai/src/ (motor de indexación)
+    ok Actualiza scripts (update.py, update_index.py, pre-commit.hook)
+    ok Regenera automáticamente todos los índices después de actualizar
+    ok Reinstala git hook automáticamente
 """
 
 import os
@@ -42,7 +42,7 @@ GITHUB_BRANCH = "main"
 def print_banner():
     """Muestra banner de presentación"""
     print("\n" + "=" * 70)
-    print("  AI AGENT WIZARD - ACTUALIZADOR DEL CORE v4.0.0")
+    print("  AI AGENT WIZARD - ACTUALIZADOR DEL CORE v5.0.0")
     print("  Actualiza sistema .ai/ y regenera índices automáticamente")
     print("=" * 70 + "\n")
 
@@ -76,21 +76,21 @@ def download_repository(verbose=False):
         if verbose:
             print()
         else:
-            print(" ✓")
+            print(" ok")
         
         return temp_dir, zip_path
         
     except Exception as e:
-        print(f" ✗\n  ERROR: No se pudo descargar: {e}")
+        print(f" FAIL\n  ERROR: No se pudo descargar: {e}")
         return None, None
 
 
 def extract_repository(zip_path, dest_dir, verbose=False):
     """Extrae el ZIP descargado"""
     if verbose:
-        print(f"  📦 Extrayendo archivos...")
+        print(f"  Extrayendo archivos...")
     else:
-        print("  📦 Extrayendo archivos...", end="", flush=True)
+        print("  Extrayendo archivos...", end="", flush=True)
     
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
@@ -103,12 +103,12 @@ def extract_repository(zip_path, dest_dir, verbose=False):
         extracted_path = os.path.join(dest_dir, extracted_dirs[0])
         
         if not verbose:
-            print(" ✓")
+            print(" ok")
         
         return extracted_path
         
     except Exception as e:
-        print(f" ✗\n  ERROR: No se pudo extraer: {e}")
+        print(f" FAIL\n  ERROR: No se pudo extraer: {e}")
         return None
 
 
@@ -120,9 +120,9 @@ def update_core(extracted_path, ai_dir, verbose=False):
     
     # 1. Actualizar motor (.ai/src/)
     if verbose:
-        print("  🔧 Actualizando motor de indexación (.ai/src/)...", end="", flush=True)
+        print("  Actualizando motor de indexacion (.ai/src/)...", end="", flush=True)
     else:
-        print("  🔧 Actualizando motor...", end="", flush=True)
+        print("  Actualizando motor...", end="", flush=True)
     
     try:
         src_path = os.path.join(extracted_path, 'src')
@@ -134,17 +134,17 @@ def update_core(extracted_path, ai_dir, verbose=False):
             shutil.rmtree(engine_dst)
         
         shutil.copytree(src_path, engine_dst, ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-        print(" ✓")
+        print(" ok")
         updated.append('motor')
     except Exception as e:
-        print(f" ✗")
+        print(f" FAIL")
         errors.append(f"Motor: {e}")
     
     # 2. Actualizar scripts
     if verbose:
-        print("  📝 Actualizando scripts (.ai/)...", end="", flush=True)
+        print("  Actualizando scripts (.ai/)...", end="", flush=True)
     else:
-        print("  📝 Actualizando scripts...", end="", flush=True)
+        print("  Actualizando scripts...", end="", flush=True)
     
     try:
         wizard_ai = os.path.join(extracted_path, '.ai')
@@ -156,18 +156,18 @@ def update_core(extracted_path, ai_dir, verbose=False):
             if os.path.exists(src_script):
                 shutil.copy2(src_script, dst_script)
         
-        print(" ✓")
+        print(" ok")
         updated.append('scripts')
     except Exception as e:
-        print(f" ✗")
+        print(f" FAIL")
         errors.append(f"Scripts: {e}")
     
     # 3. Reinstalar git hook
     project_path = Path(ai_dir).parent
     if verbose:
-        print("  🪝 Reinstalando git hook...", end="", flush=True)
+        print("  Reinstalando git hook...", end="", flush=True)
     else:
-        print("  🪝 Reinstalando hook...", end="", flush=True)
+        print("  Reinstalando hook...", end="", flush=True)
     
     try:
         git_hooks_dir = project_path / '.git' / 'hooks'
@@ -180,12 +180,12 @@ def update_core(extracted_path, ai_dir, verbose=False):
             if os.name != 'nt':
                 os.chmod(str(hook_dst), 0o755)
             
-            print(" ✓")
+            print(" ok")
             updated.append('hook')
         else:
-            print(" ⊘ (no Git)")
+            print(" - (no Git)")
     except Exception as e:
-        print(f" ⚠")
+        print(f" [!]")
     
     return errors, updated
 
@@ -193,7 +193,7 @@ def update_core(extracted_path, ai_dir, verbose=False):
 def regenerate_indices(ai_dir, verbose=False):
     """Regenera todos los índices automáticamente"""
     print()  # Línea en blanco
-    print("  🔄 Regenerando índices (automático)...", end="", flush=True)
+    print("  Regenerando indices (automatico)...", end="", flush=True)
     
     try:
         update_script = Path(ai_dir) / 'update_index.py'
@@ -212,11 +212,11 @@ def regenerate_indices(ai_dir, verbose=False):
         if result.returncode != 0:
             raise Exception(result.stderr or "update_index.py falló")
         
-        print(" ✓")
+        print(" ok")
         return True
         
     except Exception as e:
-        print(f" ✗")
+        print(f" FAIL")
         print(f"  ERROR: {e}")
         return False
 
@@ -244,12 +244,12 @@ def main():
     ai_dir = os.path.dirname(os.path.abspath(__file__))
     project_path = os.path.dirname(ai_dir)
     
-    print(f"  📂 Proyecto: {os.path.basename(project_path)}")
-    print(f"  📍 Core en: {ai_dir}\n")
+    print(f"  Proyecto: {os.path.basename(project_path)}")
+    print(f"  Core en: {ai_dir}\n")
     
     # Confirmación (si no es auto)
     if not auto_mode:
-        print("  ⚠️  Esta operación:")
+        print("  [!] Esta operacion:")
         print("     1. Descarga la última versión del core desde GitHub")
         print("     2. Actualiza .ai/src/, scripts y git hook")
         print("     3. Regenera automáticamente todos los índices YAML")
@@ -276,23 +276,36 @@ def main():
         if errors:
             print()
             for error in errors:
-                print(f"  ⚠️  {error}")
+                print(f"  [!] {error}")
         
         # Fase 4: Regenerar índices automáticamente
         success = regenerate_indices(ai_dir, verbose)
+        
+        # Fase 5: Migrar archivos de instrucciones (v4→v5)
+        try:
+            engine_src = Path(ai_dir) / 'src'
+            if engine_src.is_dir():
+                sys.path.insert(0, str(engine_src))
+                from main import upgrade_project_files
+                upgrade_project_files(str(project_path))
+        except Exception as e:
+            if verbose:
+                print(f"  [!] Migracion de archivos de instrucciones: {e}")
         
         # Resultado final
         print()
         print("  " + "=" * 70)
         
         if success:
-            print("  ✅ ACTUALIZACIÓN COMPLETADA")
+            print("  [OK] ACTUALIZACION COMPLETADA")
             print("  " + "=" * 70)
             print(f"\n  Actualizado: {', '.join(updated)}")
             print(f"  Índices: regenerados automáticamente")
-            print(f"  Versión core: v4.0.0\n")
+            print(f"  AGENT_GUIDE.md: migrado a v5.0 (sección de negocio preservada)")
+            print(f"  Archivos IDE: CLAUDE.md, copilot-instructions.md, .windsurfrules")
+            print(f"  Versión core: v5.0.0\n")
         else:
-            print("  ⚠️  ACTUALIZACIÓN CON ERRORES")
+            print("  [!] ACTUALIZACION CON ERRORES")
             print("  " + "=" * 70)
             print(f"\n  Actualizado: {', '.join(updated)}")
             print(f"  Índices: NO se regeneraron correctamente")

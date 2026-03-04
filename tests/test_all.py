@@ -1,5 +1,5 @@
 """
-Tests unitarios del AI Agent Wizard v4.0.0
+Tests unitarios del AI Agent Wizard v5.0.0
 """
 
 import unittest
@@ -14,13 +14,20 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 from core.validators import check_python_version, check_git_installed, check_disk_space, check_write_permissions
 from core.scanner import scan_files, is_empty_project
 from core.detectors import detect_languages, detect_frameworks
-from core.extractors import extract_functions, extract_endpoints, extract_ui_components, extract_dependencies
+from core.extractors import (
+    extract_functions, extract_endpoints, extract_ui_components, extract_dependencies,
+    extract_call_graph, extract_types_and_models, extract_docstrings,
+    extract_config_map, extract_patterns
+)
 from templates.project_templates import suggest_template
 from generators.all_generators import (
     generate_project_index, generate_all_yamls,
     generate_architecture_yaml, generate_flow_yaml, generate_graph_yaml,
     generate_changes_yaml, generate_summaries_yaml,
-    generate_context_budget_yaml, generate_protocol_yaml
+    generate_context_budget_yaml, generate_protocol_yaml,
+    generate_context_anchor_yaml, generate_call_graph_yaml,
+    generate_types_yaml, generate_docstrings_yaml, generate_config_map_yaml,
+    generate_entry_points_yaml, generate_patterns_yaml, generate_quick_context_yaml
 )
 
 
@@ -426,6 +433,220 @@ class TestGenerators(unittest.TestCase):
         self.assertIn('GIT_WORKFLOW.yaml', yamls)
 
 
+class TestNewExtractors(unittest.TestCase):
+    """Tests para los nuevos extractores v5.0"""
+
+    def test_extract_call_graph(self):
+        """Extrae grafo de llamadas entre funciones"""
+        files_map = {
+            'app.py': {
+                'type': 'py', 'lines': 6,
+                'content': [
+                    'def main():\n',
+                    '    result = process()\n',
+                    '    save(result)\n',
+                    'def process():\n',
+                    '    return validate()\n',
+                    'def validate():\n'
+                ]
+            }
+        }
+        functions = {'app.py': {'main': 1, 'process': 4, 'validate': 6}}
+        graph = extract_call_graph(files_map, functions)
+        self.assertIn('calls', graph)
+        self.assertIn('called_by', graph)
+        # main should call process
+        main_calls = graph['calls'].get('app.py::main', [])
+        self.assertIn('app.py::process', main_calls)
+
+    def test_extract_types_and_models(self):
+        """Extrae tipos y modelos de Python"""
+        files_map = {
+            'models.py': {
+                'type': 'py', 'lines': 5,
+                'content': [
+                    'from dataclasses import dataclass\n',
+                    '@dataclass\n',
+                    'class User:\n',
+                    '    name: str\n',
+                    '    age: int\n'
+                ]
+            }
+        }
+        types = extract_types_and_models(files_map)
+        self.assertIsInstance(types, dict)
+
+    def test_extract_docstrings(self):
+        """Extrae docstrings de funciones Python"""
+        files_map = {
+            'utils.py': {
+                'type': 'py', 'lines': 5,
+                'content': [
+                    'def helper():\n',
+                    '    """Función auxiliar que calcula cosas."""\n',
+                    '    pass\n',
+                    'def other():\n',
+                    '    pass\n'
+                ]
+            }
+        }
+        functions = {'utils.py': {'helper': 1, 'other': 4}}
+        docs = extract_docstrings(files_map, functions)
+        self.assertIsInstance(docs, dict)
+
+    def test_extract_config_map(self):
+        """Extrae variables de entorno y configuración"""
+        files_map = {
+            'config.py': {
+                'type': 'py', 'lines': 3,
+                'content': [
+                    "DATABASE_URL = os.environ.get('DATABASE_URL')\n",
+                    "SECRET_KEY = os.getenv('SECRET_KEY', 'default')\n",
+                    "DEBUG = True\n"
+                ]
+            }
+        }
+        tmpdir = tempfile.mkdtemp()
+        try:
+            config = extract_config_map(files_map, tmpdir)
+            self.assertIn('env_vars', config)
+        finally:
+            shutil.rmtree(tmpdir)
+
+    def test_extract_patterns(self):
+        """Extrae patrones de diseño y convenciones"""
+        files_map = {
+            'middleware.py': {
+                'type': 'py', 'lines': 3,
+                'content': [
+                    '@app.before_request\n',
+                    'def check_auth():\n',
+                    '    pass\n'
+                ]
+            }
+        }
+        functions = {'middleware.py': {'check_auth': 2}}
+        frameworks = {'backend': ['Flask'], 'frontend': [], 'db': [], 'other': []}
+        patterns = extract_patterns(files_map, functions, frameworks)
+        self.assertIsInstance(patterns, dict)
+
+
+class TestNewGenerators(unittest.TestCase):
+    """Tests para los nuevos generadores v5.0"""
+
+    def setUp(self):
+        self.project_name = 'test_project'
+        self.languages = ['Python']
+        self.frameworks = {'backend': ['Flask'], 'frontend': [], 'db': [], 'other': []}
+        self.files_map = {
+            'app.py': {'type': 'py', 'lines': 10},
+            'utils.py': {'type': 'py', 'lines': 5}
+        }
+        self.functions = {'app.py': {'create_app': 1, 'main': 8}}
+        self.endpoints = {'GET /api/users': {'handler': 'get_users', 'file': 'app.py', 'line': 5}}
+        self.components = {}
+
+    def test_generate_context_anchor(self):
+        """Genera CONTEXT_ANCHOR.yaml ultra-compacto"""
+        content = generate_context_anchor_yaml(
+            self.project_name, self.languages, self.frameworks,
+            self.functions, self.endpoints, self.components, self.files_map
+        )
+        self.assertIn('CONTEXT_ANCHOR', content)
+        self.assertIn(self.project_name, content)
+
+    def test_generate_call_graph_yaml(self):
+        """Genera CALL_GRAPH.yaml"""
+        call_graph = {
+            'calls': {'app.py::main': ['app.py::create_app']},
+            'called_by': {'app.py::create_app': ['app.py::main']}
+        }
+        content = generate_call_graph_yaml(call_graph)
+        self.assertIn('CALL GRAPH', content)
+        self.assertIn('main', content)
+
+    def test_generate_types_yaml(self):
+        """Genera TYPES.yaml"""
+        types = {
+            'User': {
+                'kind': 'dataclass', 'file': 'models.py', 'line': 3,
+                'fields': [{'name': 'name', 'type': 'str'}, {'name': 'age', 'type': 'int'}],
+                'extends': []
+            }
+        }
+        content = generate_types_yaml(types)
+        self.assertIn('TYPES', content)
+        self.assertIn('User', content)
+
+    def test_generate_docstrings_yaml(self):
+        """Genera DOCSTRINGS.yaml"""
+        docstrings = {
+            'app.py::create_app': {
+                'file': 'app.py', 'line': 1,
+                'description': 'Crea la aplicacion Flask',
+                'params': [{'name': 'config', 'type': 'str', 'desc': 'Path al config'}],
+                'returns': {'type': 'Flask', 'desc': 'Instancia de la app'}
+            }
+        }
+        content = generate_docstrings_yaml(docstrings)
+        self.assertIn('DOCSTRINGS', content)
+        self.assertIn('create_app', content)
+
+    def test_generate_config_map_yaml(self):
+        """Genera CONFIG_MAP.yaml"""
+        config_map = {
+            'env_vars': [{'name': 'DATABASE_URL', 'file': 'config.py', 'line': 1}],
+            'config_files': []
+        }
+        content = generate_config_map_yaml(config_map)
+        self.assertIn('CONFIG MAP', content)
+        self.assertIn('DATABASE_URL', content)
+
+    def test_generate_entry_points_yaml(self):
+        """Genera ENTRY_POINTS.yaml"""
+        dependencies = {'app.py': ['utils.py']}
+        call_graph = {'calls': {}, 'called_by': {}}
+        content = generate_entry_points_yaml(
+            self.files_map, self.functions, self.endpoints,
+            self.components, dependencies, call_graph
+        )
+        self.assertIn('ENTRY POINTS', content)
+
+    def test_generate_patterns_yaml(self):
+        """Genera PATTERNS.yaml"""
+        patterns = {
+            'middleware': [], 'decorators': {}, 'design_patterns': [],
+            'error_handling': {'strategy': 'distributed', 'custom_exceptions': []},
+            'naming': {'style': 'snake_case', 'samples': {'snake_case': 5, 'camelCase': 0, 'PascalCase': 1}},
+            'auth': []
+        }
+        content = generate_patterns_yaml(patterns)
+        self.assertIn('PATTERNS', content)
+
+    def test_generate_quick_context_yaml(self):
+        """Genera QUICK_CONTEXT.yaml"""
+        config_map = {'env_vars': [], 'config_files': []}
+        content = generate_quick_context_yaml(
+            self.project_name, self.languages, self.frameworks,
+            self.functions, self.endpoints, self.components,
+            self.files_map, config_map
+        )
+        self.assertIn('QUICK CONTEXT', content)
+
+    def test_protocol_has_workflow_rules(self):
+        """Verifica que PROTOCOL.yaml contiene reglas de workflow"""
+        content = generate_protocol_yaml()
+        self.assertIn('WORKFLOW RULES', content)
+        self.assertIn('during_fixes', content)
+        self.assertIn('first_response', content)
+
+    def test_protocol_has_first_response(self):
+        """Verifica que PROTOCOL.yaml obliga a completar descripción del proyecto"""
+        content = generate_protocol_yaml()
+        self.assertIn('FIRST RESPONSE OBLIGATION', content)
+        self.assertIn('PENDIENTE', content)
+
+
 class TestTemplates(unittest.TestCase):
     """Tests para templates de proyectos"""
     
@@ -469,6 +690,9 @@ class TestInstallFlow(unittest.TestCase):
             'GRAPH.yaml', 'CONVENTIONS.yaml', 'TESTING.yaml',
             'ERRORS.yaml', 'GIT_WORKFLOW.yaml',
             'CHANGES.yaml', 'SUMMARIES.yaml', 'CONTEXT_BUDGET.yaml', 'PROTOCOL.yaml',
+            'AI_INSTRUCTIONS.yaml',
+            'CONTEXT_ANCHOR.yaml', 'CALL_GRAPH.yaml', 'CONFIG_MAP.yaml',
+            'ENTRY_POINTS.yaml', 'PATTERNS.yaml', 'QUICK_CONTEXT.yaml',
             'update.py', 'update_index.py', 'pre-commit.hook'
         ]
         for fname in expected_files:
@@ -477,8 +701,22 @@ class TestInstallFlow(unittest.TestCase):
                 f"Falta {fname} en .ai/"
             )
         
-        # Verificar que AGENT_GUIDE.md existe
-        self.assertTrue(os.path.exists(os.path.join(self.tmpdir, 'AGENT_GUIDE.md')))
+        # Verificar que AGENT_GUIDE.md existe con contenido v5.0
+        agent_guide_path = os.path.join(self.tmpdir, 'AGENT_GUIDE.md')
+        self.assertTrue(os.path.exists(agent_guide_path))
+        with open(agent_guide_path, 'r', encoding='utf-8') as f:
+            guide_content = f.read()
+        self.assertIn('CONTEXT_ANCHOR', guide_content, "AGENT_GUIDE debe referenciar CONTEXT_ANCHOR")
+        self.assertIn('Estado: PENDIENTE', guide_content, "AGENT_GUIDE debe tener sección de negocio pendiente")
+        self.assertIn('REGLAS DE WORKFLOW', guide_content, "AGENT_GUIDE debe tener reglas de workflow")
+
+        # Verificar archivos IDE
+        self.assertTrue(os.path.exists(os.path.join(self.tmpdir, 'CLAUDE.md')), "Falta CLAUDE.md")
+        self.assertTrue(os.path.exists(os.path.join(self.tmpdir, '.windsurfrules')), "Falta .windsurfrules")
+        self.assertTrue(
+            os.path.exists(os.path.join(self.tmpdir, '.github', 'copilot-instructions.md')),
+            "Falta .github/copilot-instructions.md"
+        )
         
         # Verificar que .ai/src/ (motor) fue copiado
         self.assertTrue(os.path.isdir(os.path.join(ai_dir, 'src')))

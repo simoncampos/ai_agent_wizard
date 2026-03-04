@@ -12,10 +12,10 @@ OPCIONES:
     --help, -h      Mostrar esta ayuda
 
 CARACTERÍSTICAS:
-    ✓ Descarga código actualizado desde GitHub
-    ✓ Instala sobre proyecto actual
-    ✓ Limpia archivos temporales automáticamente
-    ✓ Sin dependencias externas (solo Python stdlib)
+    ok Descarga código actualizado desde GitHub
+    ok Instala sobre proyecto actual
+    ok Limpia archivos temporales automáticamente
+    ok Sin dependencias externas (solo Python stdlib)
 """
 
 import sys
@@ -38,7 +38,7 @@ GITHUB_BRANCH = "main"
 def print_banner():
     """Muestra banner de presentación"""
     print("\n" + "=" * 70)
-    print("  AI AGENT WIZARD - INSTALADOR v4.0.0")
+    print("  AI AGENT WIZARD - INSTALADOR v5.0.0")
     print("  Indexación inteligente: menos tokens, cero navegación")
     print("=" * 70 + "\n")
 
@@ -50,9 +50,9 @@ def download_repository(repo_url, dest_dir, verbose=False):
     zip_path = os.path.join(dest_dir, "ai_agent_wizard.zip")
     
     if verbose:
-        print(f"  📥 Descargando desde: {zip_url}")
+        print(f"   Descargando desde: {zip_url}")
     else:
-        print("  📥 Descargando código actualizado...", end="", flush=True)
+        print("   Descargando código actualizado...", end="", flush=True)
     
     try:
         # Crear contexto SSL sin verificación (para evitar errores de certificado)
@@ -75,28 +75,28 @@ def download_repository(repo_url, dest_dir, verbose=False):
         if verbose:
             print()
         else:
-            print(" ✓")
+            print(" ok")
         
         return zip_path
         
     except Exception as e:
-        print(f" ✗\n  ERROR: No se pudo descargar el repositorio: {e}")
+        print(f" FAIL\n  ERROR: No se pudo descargar el repositorio: {e}")
         return None
 
 
 def extract_repository(zip_path, dest_dir, verbose=False):
     """Extrae el ZIP descargado"""
     if verbose:
-        print(f"  📦 Extrayendo archivos...")
+        print(f"   Extrayendo archivos...")
     else:
-        print("  📦 Extrayendo archivos...", end="", flush=True)
+        print("   Extrayendo archivos...", end="", flush=True)
     
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(dest_dir)
         
         if not verbose:
-            print(" ✓")
+            print(" ok")
         
         # Buscar directorio extraído (GitHub crea carpeta con nombre-branch)
         extracted_dirs = [d for d in os.listdir(dest_dir) if os.path.isdir(os.path.join(dest_dir, d))]
@@ -111,13 +111,13 @@ def extract_repository(zip_path, dest_dir, verbose=False):
         return extracted_path
         
     except Exception as e:
-        print(f" ✗\n  ERROR: No se pudo extraer el archivo: {e}")
+        print(f" FAIL\n  ERROR: No se pudo extraer el archivo: {e}")
         return None
 
 
 def install_wizard(extracted_path, project_path, auto_mode=False, verbose=False):
     """Instala el wizard usando el código descargado"""
-    print("\n  🚀 Iniciando instalación...\n")
+    print("\n   Iniciando instalación...\n")
     
     # Verificar que exista src/ en el código descargado
     src_path = os.path.join(extracted_path, 'src')
@@ -151,14 +151,14 @@ def install_wizard(extracted_path, project_path, auto_mode=False, verbose=False)
 def cleanup(temp_dir, verbose=False):
     """Limpia archivos temporales"""
     if verbose:
-        print(f"\n  🧹 Limpiando archivos temporales: {temp_dir}")
+        print(f"\n   Limpiando archivos temporales: {temp_dir}")
     else:
-        print("\n  🧹 Limpiando archivos temporales...", end="", flush=True)
+        print("\n   Limpiando archivos temporales...", end="", flush=True)
     
     try:
         shutil.rmtree(temp_dir, ignore_errors=True)
         if not verbose:
-            print(" ✓")
+            print(" ok")
     except Exception as e:
         if verbose:
             print(f"     Advertencia: No se pudo limpiar completamente: {e}")
@@ -181,8 +181,8 @@ def main():
     project_path = os.path.abspath(args[0] if args else os.getcwd())
     project_name = os.path.basename(project_path)
     
-    print(f"  📂 Proyecto: {project_name}")
-    print(f"  📍 Ruta: {project_path}\n")
+    print(f"   Proyecto: {project_name}")
+    print(f"   Ruta: {project_path}\n")
     
     # Confirmar instalación (si no es auto)
     if not auto_mode:
@@ -197,7 +197,7 @@ def main():
     temp_dir = tempfile.mkdtemp(prefix='ai_agent_wizard_')
     
     if verbose:
-        print(f"  📁 Directorio temporal: {temp_dir}\n")
+        print(f"   Directorio temporal: {temp_dir}\n")
     
     try:
         # Fase 1: Descargar
